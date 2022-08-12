@@ -5,10 +5,11 @@ import { WORLD_SIZE } from "../Scene";
 
 const Earth = forwardRef<Mesh<SphereBufferGeometry>>((props, ref) => {
   const texture = useTexture({
-    map: "/textures/grass.jpeg",
-    displacementMap: "/textures/green_hedge_disp.jpg",
-    normalMap: "/textures/green_hedge_normal.jpg",
-    aoMap: "/textures/green_hedge_ao.jpg",
+    map: "/textures/grass/Map.jpeg",
+    displacementMap: "/textures/grass/DisplacementMap.jpg",
+    normalMap: "/textures/grass/NormalMap.jpg",
+    aoMap: "/textures/grass/AmbientOcclusionMap.jpg",
+    spcularMap: "/textures/grass/SpecularMap.jpg"
   });
 
   Object.keys(texture).forEach((key) => {

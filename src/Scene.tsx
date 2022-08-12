@@ -20,8 +20,8 @@ import Earth from "./components/Earth";
 import House from "./components/House";
 import Lake from "./components/Lake";
 import Layers from "./components/Layers";
-import Mountain from "./components/Mountain";
 import Road from "./components/Road";
+import { MountainInstances, Mountain } from "./components/Mountain";
 import { TreeInstances, Tree } from "./components/Tree";
 import {
   COLORS,
@@ -37,6 +37,7 @@ import {
   pickRandomSphericalPos,
 } from "./utils";
 import Clouds from "./components/Clouds";
+import Mountains from "./components/Mountains";
 
 export const WORLD_SIZE = 0.8;
 
@@ -56,60 +57,6 @@ export const WORLD_SIZE = 0.8;
 //     0
 //   ),
 // };
-
-const BlackRoad = () => {
-  const meshRef = useRef<Mesh>();
-  const texture = useTexture("/textures/black_road.jpg");
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.x = 1;
-  texture.repeat.y = 1;
-
-  useEffect(() => {
-    const center = new Vector3().copy(new Vector3(0, 0, 0));
-    const localCenter = new Vector3();
-    const v3 = new Vector3();
-
-    meshRef.current!.worldToLocal(localCenter.copy(center));
-    const pos = meshRef.current!.geometry.attributes.position;
-
-    for (let i = 0; i < pos.count; i++) {
-      v3.fromBufferAttribute(pos, i);
-      v3.sub(localCenter);
-      v3.setLength(2).add(localCenter);
-      pos.setXYZ(i, v3.x, v3.y, v3.z);
-    }
-
-    meshRef.current!.geometry.computeVertexNormals();
-    pos.needsUpdate = true;
-  }, []);
-
-  return (
-    <group>
-      <mesh ref={meshRef} position={[0, 0, 0.5]}>
-        <boxBufferGeometry args={[0.2, 1, 0.01]} />
-        <meshStandardMaterial map={texture} />
-      </mesh>
-    </group>
-  );
-};
-
-const BlackRoad2 = () => {
-  const texture = useTexture("/textures/black_road.jpg");
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.x = 1;
-  texture.repeat.y = 1;
-
-  return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.5, 0]}>
-        <boxBufferGeometry args={[0.2, 1, 0.01]} />
-        <meshStandardMaterial map={texture} />
-      </mesh>
-    </group>
-  );
-};
 
 const layers = new Array(14).fill(null).map((o, i) => {
   // const color1 = pickRandomColorWithTheme(
@@ -161,6 +108,9 @@ const layers = new Array(14).fill(null).map((o, i) => {
   };
 });
 
+const getRandomEarthPoints = (count: number) =>
+  new Array(count).fill(null).map(() => pickRandomSphericalPos());
+
 const Scene = () => {
   const { viewport, aspect, scene, gl } = useThree((state) => ({
     viewport: state.viewport,
@@ -200,14 +150,9 @@ const Scene = () => {
     }
   });
 
-  const earthClusterPoints = useMemo(
-    () => new Array(10).fill(null).map(() => pickRandomSphericalPos()),
-    []
-  );
-
-  const earthPoints = useMemo(
+  const treePoints = useMemo(
     () =>
-      earthClusterPoints.map((v3) => {
+      getRandomEarthPoints(10).map((v3) => {
         const itemCount = Math.round(pickRandomIntFromInterval(10, 25));
 
         return new Array(itemCount).fill(null).map((o, i) => ({
@@ -220,13 +165,10 @@ const Scene = () => {
           colorStem: "",
         }));
       }),
-    [earthClusterPoints]
+    []
   );
 
-  // useEffect(() => {
-  //   console.log("earthClusterPoints", earthClusterPoints);
-  //   console.log("earthPoints", earthPoints, earthPoints.flat().length);
-  // }, [earthPoints, earthClusterPoints]);
+  const mountainPoints = useMemo(() => getRandomEarthPoints(2), []);
 
   return (
     <>
@@ -255,18 +197,23 @@ const Scene = () => {
         <Earth ref={earthRef} />
         <House earthRef={earthRef} />
         <Clouds />
+        <Mountains />
+
         {/* <Lake gl={gl} /> */}
-        {/* <Mountain /> */}
         {/* <Road earthRef={earthRef} /> */}
 
         <Layers earthRef={earthRef} layers={layers} />
         <TreeInstances>
-          {earthPoints.flat().map((o, i) => (
+          {treePoints.flat().map((o, i) => (
             <Tree earthRef={earthRef} data={o} key={i} />
           ))}
         </TreeInstances>
-        {/* <BlackRoad />
-        <BlackRoad2 /> */}
+
+        {/* <MountainInstances>
+          {mountainPoints.map((o, i) => (
+            <Mountain earthRef={earthRef} v3={o} key={i} />
+          ))}
+        </MountainInstances> */}
       </group>
     </>
   );

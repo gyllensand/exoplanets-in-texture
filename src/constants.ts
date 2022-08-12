@@ -9,6 +9,7 @@ export enum TEXTURE_TYPES {
   DESERT = 1,
   TRACKS = 2,
   STITCH = 3,
+  PAVEMENT = 4
 }
 
 export const TEXTURES = [
@@ -16,6 +17,7 @@ export const TEXTURES = [
   ...new Array(2).fill(null).map(() => 1),
   ...new Array(2).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
+  ...new Array(2).fill(null).map(() => 4),
 ];
 
 export const SHAPES = [

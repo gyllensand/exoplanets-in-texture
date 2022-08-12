@@ -44,6 +44,13 @@ const Layers = ({
     aoMap: "/textures/stitch/AmbientOcclusionMap.jpg",
   });
 
+  const pavementTexture = useTexture({
+    map: "/textures/pavement/Map.png",
+    displacementMap: "/textures/pavement/DisplacementMap.png",
+    normalMap: "/textures/pavement/NormalMap.png",
+    aoMap: "/textures/pavement/AmbientOcclusionMap.png",
+  });
+
   useEffect(() => {
     if (!earthRef?.current || !meshRef?.current) {
       return;
@@ -198,13 +205,33 @@ const Layers = ({
               displacementScale={0}
             />
           );
+
+        case TEXTURE_TYPES.PAVEMENT:
+          Object.keys(pavementTexture).forEach((key) => {
+            pavementTexture[key as keyof typeof pavementTexture].wrapS =
+              RepeatWrapping;
+            pavementTexture[key as keyof typeof pavementTexture].wrapT =
+              RepeatWrapping;
+            pavementTexture[key as keyof typeof pavementTexture].repeat.x = 4;
+            pavementTexture[key as keyof typeof pavementTexture].repeat.y = 2;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.5}
+              {...pavementTexture}
+              displacementScale={0}
+            />
+          );
         default:
           return (
             <meshStandardMaterial color={color} transparent opacity={0.5} />
           );
       }
     },
-    [stitchTexture, desertTexture, tracksTexture]
+    [stitchTexture, desertTexture, tracksTexture, pavementTexture]
   );
 
   const getLayers = useCallback(() => {

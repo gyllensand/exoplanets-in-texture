@@ -21,7 +21,7 @@ import { Vector3, Mesh, SphereBufferGeometry, Group } from "three";
 import { WORLD_SIZE } from "../Scene";
 import { getRandomNumber, pickRandomIntFromInterval } from "../utils";
 
-interface Tree {
+interface TreeData {
   v3: Vector3;
   colorLeaves?: string;
   colorStem?: string;
@@ -69,13 +69,13 @@ export function Tree({
   data,
   earthRef,
 }: {
-  data: Tree;
+  data: TreeData;
   earthRef?: RefObject<Mesh<SphereBufferGeometry>>;
 }) {
   const instances = useContext(context);
   const groupRef = useRef<Group>();
   const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00002, []);
-  const { nodes, animations } = useGLTF(
+  const { nodes, materials, animations } = useGLTF(
     "/models/Tree/scene-transformed.glb"
   ) as GLTFResult;
   // @ts-ignore
@@ -94,6 +94,12 @@ export function Tree({
     groupRef.current.lookAt(earthRef.current.position);
   }, [earthRef, data.v3]);
 
+  useEffect(() => {
+    materials.Tree_green_light.transparent = true;
+    materials.Tree_green_light.opacity = 0.5;
+    materials.Tree_green_light.roughness = 1;
+  }, [materials]);
+
   // useEffect(() => {
   //   // @ts-ignore
   //   actions?.Main?.play();
@@ -102,6 +108,7 @@ export function Tree({
   const leafColor = data.colorLeaves ? { color: data.colorLeaves } : {};
   const stemColor = data.colorStem ? { color: data.colorStem } : {};
 
+  // console.log(materials);
   return (
     <group ref={groupRef}>
       <group rotation={[-Math.PI, 0, getRandomNumber() * 5]}>

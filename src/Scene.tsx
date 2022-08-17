@@ -25,15 +25,18 @@ import Layers from "./components/Layers";
 import Road from "./components/Road";
 import { TreeInstances, Tree } from "./components/Tree";
 import {
+  CLOUDS,
   COLORS,
   COLORS_DARK,
   COLORS_LIGHT,
   MOUNTAINS,
   SUMMER_TREES,
   TEXTURES,
+  THEME_COLORS,
 } from "./constants";
 import {
   getRandomNumber,
+  pickRandomColorWithTheme,
   pickRandomHash,
   pickRandomIntFromInterval,
   pickRandomSphericalPos,
@@ -43,7 +46,9 @@ import Sphere from "./components/Sphere";
 
 export const WORLD_SIZE = 0.8;
 
+const colorTheme = pickRandomHash(THEME_COLORS);
 const mountains = pickRandomHash(MOUNTAINS);
+const clouds = pickRandomHash(CLOUDS);
 
 // @ts-ignore
 // window.$fxhashFeatures = {
@@ -51,10 +56,6 @@ const mountains = pickRandomHash(MOUNTAINS);
 //   primaryBgColor,
 //   secondaryBgColor,
 //   lightingTheme: mainTheme,
-//   shapeThemeColor: themeColor,
-//   shapeThemeColor2: themeColor2,
-//   shapeThemeColor3: themeColor3,
-//   shapeThemeColor4: themeColor4,
 //   shapeCount: shapes.length,
 //   shapeComposition: objects.reduce(
 //     (total, value) => (total += value.composition),
@@ -63,36 +64,6 @@ const mountains = pickRandomHash(MOUNTAINS);
 // };
 
 const layers = new Array(14).fill(null).map((o, i) => {
-  // const color1 = pickRandomColorWithTheme(
-  //   themeColor,
-  //   colorTheme,
-  //   shapes.length
-  // );
-  // const color2 = pickRandomColorWithTheme(
-  //   themeColor2,
-  //   colorTheme,
-  //   shapes.length
-  // );
-  // const color3 = pickRandomColorWithTheme(
-  //   themeColor3,
-  //   colorTheme,
-  //   shapes.length
-  // );
-  // const color4 = pickRandomColorWithTheme(
-  //   themeColor4,
-  //   colorTheme,
-  //   shapes.length
-  // );
-  // const currentColor =
-  //   i < shapes.length / 4
-  //     ? color1
-  //     : i < shapes.length / 2
-  //     ? color2
-  //     : i < shapes.length / 1.5
-  //     ? color3
-  //     : color4;
-
-  // const secondColor = pickRandomHash(colorTheme);
   // const composition =
   //   shape +
   //   currentColor.charCodeAt(6) +
@@ -100,15 +71,13 @@ const layers = new Array(14).fill(null).map((o, i) => {
   //   i +
   //   (objectMeta[i].coveringIndexes?.length || 0);
 
-  const color = pickRandomHash(COLORS_DARK);
+  const color = pickRandomColorWithTheme(colorTheme, THEME_COLORS, 14);
   const texture = pickRandomHash(TEXTURES);
 
   return {
     index: i,
     texture,
     color,
-    // secondColor,
-    // shape,
   };
 });
 
@@ -175,9 +144,12 @@ const Scene = () => {
   return (
     <>
       {/* <color attach="background" args={["#000000"]} /> */}
-      <OrbitControls enabled={true} />
+      <OrbitControls
+        enabled={true}
+        maxPolarAngle={Math.PI * 0.75}
+        minPolarAngle={Math.PI * 0.25}
+      />
       <ambientLight intensity={0.2} />
-      {/* <ambientLight intensity={1} /> */}
       <pointLight
         ref={lightRef}
         intensity={2}
@@ -197,9 +169,9 @@ const Scene = () => {
 
       {/* <group rotation={[0, 0, Math.PI / 4]}> */}
       <group>
-        <Earth ref={earthRef} />
+        <Earth color={colorTheme} ref={earthRef} />
         <House earthRef={earthRef} />
-        <Clouds />
+        <Clouds type={clouds} />
         {new Array(mountains).fill(null).map((o, i) => (
           <Mountains key={i} />
         ))}
@@ -208,11 +180,11 @@ const Scene = () => {
         {/* <Road earthRef={earthRef} /> */}
         <Layers earthRef={earthRef} layers={layers} />
         {/* <Sphere scene={scene} /> */}
-        {/* <TreeInstances>
+        <TreeInstances>
           {treePoints.flat().map((o, i) => (
             <Tree earthRef={earthRef} data={o} key={i} />
           ))}
-        </TreeInstances> */}
+        </TreeInstances>
         {/* <PineTreeInstances>
           {treePoints.flat().map((o, i) => (
             <PineTree earthRef={earthRef} v3={o.v3} key={i} />

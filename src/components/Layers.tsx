@@ -1,5 +1,6 @@
 import { useTexture } from "@react-three/drei";
-import { useRef, RefObject, useEffect, useCallback } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useRef, RefObject, useEffect, useCallback, useMemo } from "react";
 import { Mesh, RepeatWrapping, SphereBufferGeometry, Vector3 } from "three";
 import { TEXTURE_TYPES } from "../constants";
 import { WORLD_SIZE } from "../Scene";
@@ -49,6 +50,13 @@ const Layers = ({
     displacementMap: "/textures/pavement/DisplacementMap.png",
     normalMap: "/textures/pavement/NormalMap.png",
     aoMap: "/textures/pavement/AmbientOcclusionMap.png",
+  });
+
+  const waterTexture = useTexture({
+    map: "/textures/water/Map.jpeg",
+    displacementMap: "/textures/water/Map.jpeg",
+    normalMap: "/textures/water/Map.jpeg",
+    aoMap: "/textures/water/AmbientOcclusionMap.jpg",
   });
 
   useEffect(() => {
@@ -225,35 +233,70 @@ const Layers = ({
               displacementScale={0}
             />
           );
+
+        case TEXTURE_TYPES.WATER:
+          Object.keys(waterTexture).forEach((key) => {
+            waterTexture[key as keyof typeof waterTexture].wrapS =
+              RepeatWrapping;
+            waterTexture[key as keyof typeof waterTexture].wrapT =
+              RepeatWrapping;
+            waterTexture[key as keyof typeof waterTexture].repeat.x = 4;
+            waterTexture[key as keyof typeof waterTexture].repeat.y = 2;
+          });
+
+          return (
+            <meshPhongMaterial
+              color={"#005eb8"}
+              shininess={100}
+              {...waterTexture}
+              displacementScale={0}
+            />
+          );
+
         default:
           return (
             <meshStandardMaterial color={color} transparent opacity={0.5} />
           );
       }
     },
-    [stitchTexture, desertTexture, tracksTexture, pavementTexture]
+    [stitchTexture, desertTexture, tracksTexture, pavementTexture, waterTexture]
   );
 
   const getLayers = useCallback(() => {
-    return layers.map((o, i) => (
-      <mesh
-        ref={meshRef}
-        key={i}
-        receiveShadow
-        rotation={[i === 0 ? Math.PI : 0, 0, 0]}
-      >
-        <sphereBufferGeometry
-          args={[
-            WORLD_SIZE + 0.01,
-            SEGMENTS,
-            SEGMENTS,
-            ...getLayerArgs(o.index),
-          ]}
-        />
-        {getMaterial(o)}
-      </mesh>
-    ));
+    return layers.map((o, i) => {
+      return (
+        <mesh
+          ref={meshRef}
+          key={i}
+          receiveShadow
+          rotation={[i === 0 ? Math.PI : 0, 0, 0]}
+        >
+          <sphereBufferGeometry
+            args={[
+              WORLD_SIZE + 0.01,
+              SEGMENTS,
+              SEGMENTS,
+              ...getLayerArgs(o.index),
+            ]}
+          />
+          {getMaterial(o)}
+        </mesh>
+      );
+    });
   }, [getLayerArgs, layers, getMaterial]);
+
+  const waterLayers = useMemo(
+    () => layers.filter((o) => o.texture === TEXTURE_TYPES.WATER),
+    [layers]
+  );
+
+  useFrame(() => {
+    if (waterLayers.length)
+      Object.keys(waterTexture).forEach((key) => {
+        waterTexture[key as keyof typeof waterTexture].offset.x += 1 / 3000;
+        waterTexture[key as keyof typeof waterTexture].offset.y += 1 / 3000;
+      });
+  });
 
   return <>{getLayers()}</>;
 };

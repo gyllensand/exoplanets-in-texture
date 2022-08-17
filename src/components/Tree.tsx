@@ -73,8 +73,7 @@ export function Tree({
 }) {
   const instances = useContext(context);
   const groupRef = useRef<Group>();
-  // const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00002, []);
-  const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00005, []);
+  const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00003, []);
   const rotation = useMemo(() => getRandomNumber() * 5, []);
   const { nodes, materials, animations } = useGLTF(
     "/models/Tree/scene-transformed.glb"

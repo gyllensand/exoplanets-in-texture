@@ -5,7 +5,7 @@ import { Mesh } from "three";
 import { WORLD_SIZE } from "../Scene";
 import { getRandomNumber } from "../utils";
 
-const Clouds = () => {
+const Clouds = ({ type }: { type: number }) => {
   const meshRef = useRef<Mesh>();
   const texture = useTexture({
     map: "/textures/clouds/Map.jpeg",
@@ -22,6 +22,10 @@ const Clouds = () => {
 
   const rotationX = useMemo(() => getRandomNumber() * 5, []);
   const rotationY = useMemo(() => getRandomNumber() * 5, []);
+  const currentTexture = useMemo(
+    () => (type === 0 ? texture : texture2),
+    [texture, texture2, type]
+  );
 
   useFrame(({ clock }) => {
     if (!meshRef?.current) {
@@ -33,13 +37,13 @@ const Clouds = () => {
 
   return (
     <mesh ref={meshRef} rotation={[rotationX, rotationY, 0]}>
-      <sphereBufferGeometry args={[WORLD_SIZE + 0.01, 64, 64]} />
+      <sphereBufferGeometry args={[WORLD_SIZE + 0.02, 64, 64]} />
       <meshStandardMaterial
         attach="material"
         depthWrite={false}
         transparent
         opacity={0.2}
-        {...texture2}
+        {...currentTexture}
         displacementScale={0}
       />
     </mesh>

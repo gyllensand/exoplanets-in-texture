@@ -47,12 +47,12 @@ const House = ({
         <boxBufferGeometry args={[0.06, 0.06, 0.06]} />
         <meshStandardMaterial attach="material" color="#EE786E" />
       </mesh>
-      <mesh receiveShadow position={[0.005, 0, -0.06]}>
-        <boxBufferGeometry args={[0.06, 0.06, 0.06]} />
+      <mesh receiveShadow position={[0.005, 0, -0.05]}>
+        <boxBufferGeometry args={[0.06, 0.06, 0.04]} />
         <meshStandardMaterial attach="material" color="#FCEEB5" />
       </mesh>
-      <mesh receiveShadow position={[-0.005, -0.005, -0.12]}>
-        <boxBufferGeometry args={[0.06, 0.06, 0.06]} />
+      <mesh receiveShadow position={[-0.005, -0.005, -0.09]}>
+        <boxBufferGeometry args={[0.06, 0.06, 0.04]} />
         <meshStandardMaterial attach="material" color="lightblue" />
       </mesh>
       {/* <mesh

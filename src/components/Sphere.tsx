@@ -1,8 +1,6 @@
-import { RoundedBox, useTexture } from "@react-three/drei";
-import { forwardRef } from "react";
+import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { WORLD_SIZE } from "../Scene";
-// import * as THREEi from "../THREEi";
 import * as THREEi from "../THREEi_holes";
 
 const Sphere = ({ scene }: { scene: THREE.Scene }) => {
@@ -39,15 +37,11 @@ const Sphere = ({ scene }: { scene: THREE.Scene }) => {
     texture[key as keyof typeof texture].repeat.y = 10;
   });
 
-  const material = new THREE.MeshPhongMaterial({
-    // side: THREE.DoubleSide,
-    color: 0x000000,
-    // wireframe: true,
-    // ...texture,
-    // displacementScale: 0.01,
-  });
-
-  return <mesh receiveShadow material={material} geometry={g} />;
+  return (
+    <mesh receiveShadow geometry={g}>
+      <meshPhongMaterial color="red" />
+    </mesh>
+  );
 };
 
 export default Sphere;

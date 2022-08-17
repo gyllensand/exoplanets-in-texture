@@ -12,13 +12,14 @@ const Mountains = () => {
   });
 
   const size = useMemo(() => pickRandomDecimalFromInterval(0.8, 1.2), [])
+  const depth = useMemo(() => pickRandomDecimalFromInterval(0.002, 0.02), [])
   const rotationX = useMemo(() => getRandomNumber() * 5, []);
   const rotationY = useMemo(() => getRandomNumber() * 5, []);
 
   return (
     <mesh receiveShadow rotation={[rotationX, rotationY, 0]}>
       <sphereBufferGeometry
-        args={[WORLD_SIZE - 0.002, 64, 64, 0, size, 1, size]}
+        args={[WORLD_SIZE - depth, 64, 64, 0, size, 1, size]}
       />
       <meshStandardMaterial
         attach="material"

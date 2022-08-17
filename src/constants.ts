@@ -1,11 +1,13 @@
 export const MOUNTAINS = [1, 2, 3, 4];
+export const CLOUDS = [0, 1];
 
 export enum TEXTURE_TYPES {
   EMPTY = 0,
   DESERT = 1,
   TRACKS = 2,
   STITCH = 3,
-  PAVEMENT = 4
+  PAVEMENT = 4,
+  WATER = 5
 }
 
 export const TEXTURES = [
@@ -14,12 +16,37 @@ export const TEXTURES = [
   ...new Array(2).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
   ...new Array(2).fill(null).map(() => 4),
+  // ...new Array(5).fill(null).map(() => 5),
 ];
 
 export const BG_DARK = ["#000000", "#0b0b4b", "#1b3342", "#1b4225", "#632331"];
 export const BG_LIGHT = ["#497fff", "#30f8a0", "#f97b9c", "#fe7418", "#75007e"];
 
 export const BG_COLORS = [BG_DARK, BG_DARK, BG_LIGHT];
+
+export const THEME_COLORS = [
+  "#e0feff",
+  "#FCEEB5",
+  "#ffce00",
+  "#eb3434",
+  "#30f8a0",
+  "#A2CCB6",
+  "lightpink",
+  "#f97b9c",
+  "#EE786E",
+  "#fe7418",
+  "lightblue",
+  "#00f7fb",
+  "#497fff",
+  "#344df2",
+  "#dc0fc0",
+  "#75007e",
+  "#aa4807",
+  "#800b0b",
+  "#1b4225",
+  "#1b3342",
+  "#0c0c7a",
+]
 
 export const COLORS_LIGHT = [
   "#ffffff",

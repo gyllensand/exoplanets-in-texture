@@ -18,15 +18,17 @@ import {
 } from "three";
 import Earth from "./components/Earth";
 import House from "./components/House";
+import Clouds from "./components/Clouds";
+import Mountains from "./components/Mountains";
 import Lake from "./components/Lake";
 import Layers from "./components/Layers";
 import Road from "./components/Road";
-import { MountainInstances, Mountain } from "./components/Mountain";
 import { TreeInstances, Tree } from "./components/Tree";
 import {
   COLORS,
   COLORS_DARK,
   COLORS_LIGHT,
+  MOUNTAINS,
   SUMMER_TREES,
   TEXTURES,
 } from "./constants";
@@ -36,10 +38,12 @@ import {
   pickRandomIntFromInterval,
   pickRandomSphericalPos,
 } from "./utils";
-import Clouds from "./components/Clouds";
-import Mountains from "./components/Mountains";
+import { PineTree, PineTreeInstances } from "./components/PineTree";
+import Sphere from "./components/Sphere";
 
 export const WORLD_SIZE = 0.8;
+
+const mountains = pickRandomHash(MOUNTAINS);
 
 // @ts-ignore
 // window.$fxhashFeatures = {
@@ -152,8 +156,8 @@ const Scene = () => {
 
   const treePoints = useMemo(
     () =>
-      getRandomEarthPoints(10).map((v3) => {
-        const itemCount = Math.round(pickRandomIntFromInterval(10, 25));
+      getRandomEarthPoints(6).map((v3) => {
+        const itemCount = Math.round(pickRandomIntFromInterval(5, 10));
 
         return new Array(itemCount).fill(null).map((o, i) => ({
           v3: new Vector3(
@@ -168,10 +172,9 @@ const Scene = () => {
     []
   );
 
-  const mountainPoints = useMemo(() => getRandomEarthPoints(2), []);
-
   return (
     <>
+      {/* <color attach="background" args={["#000000"]} /> */}
       <OrbitControls enabled={true} />
       <ambientLight intensity={0.2} />
       {/* <ambientLight intensity={1} /> */}
@@ -197,23 +200,24 @@ const Scene = () => {
         <Earth ref={earthRef} />
         <House earthRef={earthRef} />
         <Clouds />
-        <Mountains />
+        {new Array(mountains).fill(null).map((o, i) => (
+          <Mountains key={i} />
+        ))}
 
-        {/* <Lake gl={gl} /> */}
+        <Lake />
         {/* <Road earthRef={earthRef} /> */}
-
         <Layers earthRef={earthRef} layers={layers} />
-        <TreeInstances>
+        {/* <Sphere scene={scene} /> */}
+        {/* <TreeInstances>
           {treePoints.flat().map((o, i) => (
             <Tree earthRef={earthRef} data={o} key={i} />
           ))}
-        </TreeInstances>
-
-        {/* <MountainInstances>
-          {mountainPoints.map((o, i) => (
-            <Mountain earthRef={earthRef} v3={o} key={i} />
+        </TreeInstances> */}
+        {/* <PineTreeInstances>
+          {treePoints.flat().map((o, i) => (
+            <PineTree earthRef={earthRef} v3={o.v3} key={i} />
           ))}
-        </MountainInstances> */}
+        </PineTreeInstances> */}
       </group>
     </>
   );

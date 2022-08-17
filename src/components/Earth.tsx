@@ -9,7 +9,6 @@ const Earth = forwardRef<Mesh<SphereBufferGeometry>>((props, ref) => {
     displacementMap: "/textures/grass/DisplacementMap.jpg",
     normalMap: "/textures/grass/NormalMap.jpg",
     aoMap: "/textures/grass/AmbientOcclusionMap.jpg",
-    spcularMap: "/textures/grass/SpecularMap.jpg"
   });
 
   Object.keys(texture).forEach((key) => {

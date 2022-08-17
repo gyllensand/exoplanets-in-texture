@@ -42,7 +42,6 @@ type GLTFResult = GLTF & {
 type ActionName = "Main";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-// @ts-ignore
 const context = createContext(undefined);
 // @ts-ignore
 export function TreeInstances({ children, ...props }) {
@@ -74,7 +73,9 @@ export function Tree({
 }) {
   const instances = useContext(context);
   const groupRef = useRef<Group>();
-  const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00002, []);
+  // const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00002, []);
+  const scale = useMemo(() => pickRandomIntFromInterval(5, 10) * 0.00005, []);
+  const rotation = useMemo(() => getRandomNumber() * 5, []);
   const { nodes, materials, animations } = useGLTF(
     "/models/Tree/scene-transformed.glb"
   ) as GLTFResult;
@@ -97,7 +98,6 @@ export function Tree({
   useEffect(() => {
     materials.Tree_green_light.transparent = true;
     materials.Tree_green_light.opacity = 0.5;
-    materials.Tree_green_light.roughness = 1;
   }, [materials]);
 
   // useEffect(() => {
@@ -111,7 +111,7 @@ export function Tree({
   // console.log(materials);
   return (
     <group ref={groupRef}>
-      <group rotation={[-Math.PI, 0, getRandomNumber() * 5]}>
+      <group rotation={[-Math.PI, 0, rotation]}>
         <group scale={scale} dispose={null}>
           <group name="Sketchfab_Scene">
             <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>

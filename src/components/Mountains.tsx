@@ -1,6 +1,7 @@
 import { useTexture } from "@react-three/drei";
+import { useMemo } from "react";
 import { WORLD_SIZE } from "../Scene";
-import { getRandomNumber } from "../utils";
+import { getRandomNumber, pickRandomDecimalFromInterval } from "../utils";
 
 const Mountains = () => {
   const texture = useTexture({
@@ -10,13 +11,14 @@ const Mountains = () => {
     aoMap: "/textures/mountains/1/AmbientOcclusionMap.jpg",
   });
 
+  const size = useMemo(() => pickRandomDecimalFromInterval(0.8, 1.2), [])
+  const rotationX = useMemo(() => getRandomNumber() * 5, []);
+  const rotationY = useMemo(() => getRandomNumber() * 5, []);
+
   return (
-    <mesh
-      receiveShadow
-      rotation={[getRandomNumber() * 5, getRandomNumber() * 5, 0]}
-    >
+    <mesh receiveShadow rotation={[rotationX, rotationY, 0]}>
       <sphereBufferGeometry
-        args={[WORLD_SIZE - 0.01, 64, 64, 0, 1.2, 1, 1.2]}
+        args={[WORLD_SIZE - 0.002, 64, 64, 0, size, 1, size]}
       />
       <meshStandardMaterial
         attach="material"

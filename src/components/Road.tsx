@@ -122,7 +122,7 @@ const Road = ({
 
   return (
     <mesh ref={meshRef}>
-      <planeBufferGeometry args={[2, 2]} />
+      <planeBufferGeometry args={[0.1, 0.3]} />
       <meshStandardMaterial color="blue" />
     </mesh>
   );

@@ -2,69 +2,85 @@ import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import {
   Vector3,
+  Vector2,
   MathUtils,
   Mesh,
   PlaneGeometry,
+  Scene,
   RepeatWrapping,
   TextureLoader,
   WebGLRenderer,
   SphereBufferGeometry,
-  BackSide
+  BackSide,
+  Color,
 } from "three";
 import { WORLD_SIZE } from "../Scene";
-import { getRandomNumber } from "../utils";
+import { getRandomNumber, pickRandomDecimalFromInterval } from "../utils";
 import { Water } from "three-stdlib";
-
 extend({ Water });
 
-const Lake = ({ gl }: { gl?: WebGLRenderer }) => {
-  const meshRef = useRef<Mesh>();
-  const v3 = useMemo(() => new Vector3(), []);
-  const vertData: { initH: number; amplitude: number; phase: number }[] =
-    useMemo(() => [], []);
-
-  const geometry = meshRef?.current?.geometry;
-
-  useEffect(() => {
-    if (!geometry) {
-      return;
-    }
-
-    for (let i = 0; i < geometry.attributes.position.count; i++) {
-      v3.fromBufferAttribute(geometry.attributes.position, i);
-      vertData.push({
-        initH: v3.y,
-        amplitude: MathUtils.randFloatSpread(0.01),
-        phase: MathUtils.randFloat(0, Math.PI),
-      });
-    }
-  }, [geometry, v3, vertData]);
-
-  useFrame(({ clock }) => {
-    if (!geometry) {
-      return;
-    }
-
-    const time = clock.getElapsedTime();
-
-    vertData.forEach((vd, idx) => {
-      const y = vd.initH + Math.sin(time + vd.phase) * vd.amplitude;
-      geometry.attributes.position.setY(idx, y);
-    });
-
-    geometry.attributes.position.needsUpdate = true;
-    geometry.computeVertexNormals();
-  });
+const Lake = () => {
+  const size = useMemo(() => pickRandomDecimalFromInterval(2.6, 3), []);
+  const rotationX = useMemo(() => getRandomNumber() * 5, []);
 
   return (
-    <mesh ref={meshRef} rotation={[-Math.PI * 2, 0, 0]}>
+    <mesh rotation={[rotationX, 0, 0]}>
       <sphereBufferGeometry
-        args={[WORLD_SIZE + 0.01, 64, 64, 0, Math.PI * 2, 4.7, 0.2]}
+        args={[WORLD_SIZE + 0.015, 64, 64, 0, Math.PI * 2, size, 1.2]}
       />
-      <meshPhongMaterial color="aqua" side={BackSide} />
+      <meshPhongMaterial color="#005eb8" shininess={100} />
     </mesh>
   );
 };
+
+// const Lake = () => {
+//   const meshRef = useRef<Mesh>();
+//   const v3 = useMemo(() => new Vector3(), []);
+//   const vertData: { initH: number; amplitude: number; phase: number }[] =
+//     useMemo(() => [], []);
+
+//   const geometry = meshRef?.current?.geometry;
+
+//   useEffect(() => {
+//     if (!geometry) {
+//       return;
+//     }
+
+//     for (let i = 0; i < geometry.attributes.position.count; i++) {
+//       v3.fromBufferAttribute(geometry.attributes.position, i);
+//       vertData.push({
+//         initH: v3.y,
+//         amplitude: MathUtils.randFloatSpread(0.01),
+//         phase: MathUtils.randFloat(0, Math.PI),
+//       });
+//     }
+//   }, [geometry, v3, vertData]);
+
+//   useFrame(({ clock }) => {
+//     if (!geometry) {
+//       return;
+//     }
+
+//     const time = clock.getElapsedTime();
+
+//     vertData.forEach((vd, idx) => {
+//       const y = vd.initH + Math.sin(time + vd.phase) * vd.amplitude;
+//       geometry.attributes.position.setY(idx, y);
+//     });
+
+//     geometry.attributes.position.needsUpdate = true;
+//     geometry.computeVertexNormals();
+//   });
+
+//   return (
+//     <mesh ref={meshRef} rotation={[-Math.PI * 2, 0, 0]}>
+//       <sphereBufferGeometry
+//         args={[WORLD_SIZE + 0.01, 64, 64, 0, Math.PI * 2, 4.7, 0.2]}
+//       />
+//       <meshPhongMaterial color="aqua" side={BackSide} />
+//     </mesh>
+//   );
+// };
 
 // const Lake = ({ gl }: { gl: WebGLRenderer }) => {
 //   const ref = useRef<Mesh>();

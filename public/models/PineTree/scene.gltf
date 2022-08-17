@@ -3,86 +3,86 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 2709,
+      "count": 224,
       "max": [
-        10.385990142822266,
-        10.310850143432617,
-        10.048580169677734
+        578.1685180664063,
+        282.6112060546875,
+        451.65478515625
       ],
       "min": [
-        -10.385990142822266,
-        0.0,
-        -10.048580169677734
+        345.8518371582031,
+        56.58428955078125,
+        13.900848388671875
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 32508,
+      "byteOffset": 2688,
       "componentType": 5126,
-      "count": 2709,
+      "count": 224,
       "max": [
-        0.9932371973991394,
-        1.0,
-        0.9998958110809326
+        0.9125688672065735,
+        0.9731144905090332,
+        0.49277201294898987
       ],
       "min": [
-        -0.9969651103019714,
-        -0.9614256024360657,
-        -0.9829823970794678
+        -0.9979042410850525,
+        -0.9731569886207581,
+        -1.0
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 2709,
+      "count": 224,
       "max": [
-        0.4888145923614502,
-        0.35499119758605957
+        0.9281399846076965,
+        0.767084002494812
       ],
       "min": [
-        0.19788040220737457,
-        0.010819589719176292
+        0.016070999205112457,
+        0.010714000090956688
       ],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 3345,
+      "count": 315,
       "type": "SCALAR"
     }
   ],
   "asset": {
     "extras": {
-      "author": "nigromancer (https://sketchfab.com/nigromancer)",
+      "author": "sycoinc (https://sketchfab.com/sycoinc)",
       "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/snow-mountain-28d511ddb8624eee9684e93824e543f5",
-      "title": "Snow Mountain"
+      "source": "https://sketchfab.com/3d-models/low-poly-tree-concept-e815f8acd6d34528a82feef38d5af880",
+      "title": "Low Poly Tree Concept"
     },
-    "generator": "Sketchfab-12.65.0",
+    "generator": "Sketchfab-12.67.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 13380,
+      "byteLength": 1260,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 21672,
-      "byteOffset": 13380,
+      "byteLength": 1792,
+      "byteOffset": 1260,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 65016,
-      "byteOffset": 35052,
+      "byteLength": 5376,
+      "byteOffset": 3052,
       "byteStride": 12,
       "name": "floatBufferViews",
       "target": 34962
@@ -90,31 +90,30 @@
   ],
   "buffers": [
     {
-      "byteLength": 100068,
+      "byteLength": 8428,
       "uri": "scene.bin"
     }
   ],
   "images": [
     {
-      "uri": "textures/SM_Generic_Mountains_Snow_01_PolygonTown_01_A_baseColor.png"
+      "uri": "textures/initialShadingGroup_baseColor.png"
     }
   ],
   "materials": [
     {
       "doubleSided": true,
-      "name": "SM_Generic_Mountains_Snow_01_PolygonTown_01_A",
+      "name": "initialShadingGroup",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
-        "metallicFactor": 0.0,
-        "roughnessFactor": 0.9577051494623774
+        "metallicFactor": 0.0
       }
     }
   ],
   "meshes": [
     {
-      "name": "SM_Generic_Mountains_Snow_01_SM_Generic_Mountains_Snow_01_PolygonTown_01_A_0",
+      "name": "Object_0",
       "primitives": [
         {
           "attributes": {
@@ -158,41 +157,11 @@
       "children": [
         2
       ],
-      "matrix": [
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
-        0.0,
-        0.0,
-        -1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "name": "SM_Generic_Mountains_Snow_01.fbx"
-    },
-    {
-      "children": [
-        3
-      ],
-      "name": "RootNode"
-    },
-    {
-      "children": [
-        4
-      ],
-      "name": "SM_Generic_Mountains_Snow_01"
+      "name": "tree_2.obj.cleaner.materialmerger.gles"
     },
     {
       "mesh": 0,
-      "name": "SM_Generic_Mountains_Snow_01_SM_Generic_Mountains_Snow_01_PolygonTown_01_A_0"
+      "name": "Object_2"
     }
   ],
   "samplers": [

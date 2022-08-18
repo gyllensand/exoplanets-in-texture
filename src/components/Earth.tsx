@@ -25,7 +25,7 @@ const Earth = forwardRef<Mesh<SphereBufferGeometry>, { color: string }>(
         <meshStandardMaterial
           attach="material"
           // emissive={color}
-          // emissiveIntensity={0.1}
+          // emissiveIntensity={0.5}
           {...texture}
           displacementScale={0.01}
         />

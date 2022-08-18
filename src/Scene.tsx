@@ -43,6 +43,8 @@ import {
 } from "./utils";
 import { PineTree, PineTreeInstances } from "./components/PineTree";
 import Sphere from "./components/Sphere";
+import Trees from "./components/Trees/Trees";
+import Stem from "./components/Trees/Stem";
 
 export const WORLD_SIZE = 0.8;
 
@@ -125,7 +127,7 @@ const Scene = () => {
 
   const treePoints = useMemo(
     () =>
-      getRandomEarthPoints(6).map((v3) => {
+      getRandomEarthPoints(50).map((v3) => {
         const itemCount = Math.round(pickRandomIntFromInterval(5, 10));
 
         return new Array(itemCount).fill(null).map((o, i) => ({
@@ -135,11 +137,13 @@ const Scene = () => {
             0
           ),
           colorLeaves: pickRandomHash(SUMMER_TREES),
-          colorStem: "",
+          colorStem: "brown",
         }));
       }),
     []
   );
+
+  console.log(gl.info.render);
 
   return (
     <>
@@ -175,16 +179,16 @@ const Scene = () => {
         {new Array(mountains).fill(null).map((o, i) => (
           <Mountains key={i} />
         ))}
-
-        <Lake />
+        <Trees objects={treePoints.flat()} earthRef={earthRef} />
+        <Stem objects={treePoints.flat()} earthRef={earthRef} />
+        {/* <Lake /> */}
         {/* <Road earthRef={earthRef} /> */}
         <Layers earthRef={earthRef} layers={layers} />
-        {/* <Sphere scene={scene} /> */}
-        <TreeInstances>
+        {/* <TreeInstances>
           {treePoints.flat().map((o, i) => (
             <Tree earthRef={earthRef} data={o} key={i} />
           ))}
-        </TreeInstances>
+        </TreeInstances> */}
         {/* <PineTreeInstances>
           {treePoints.flat().map((o, i) => (
             <PineTree earthRef={earthRef} v3={o.v3} key={i} />

@@ -52,6 +52,20 @@ const Layers = ({
     aoMap: "/textures/pavement/AmbientOcclusionMap.png",
   });
 
+  const iceTexture = useTexture({
+    map: "/textures/ice/Map.png",
+    displacementMap: "/textures/ice/DisplacementMap.png",
+    normalMap: "/textures/ice/NormalMap.jpg",
+    aoMap: "/textures/ice/AmbientOcclusionMap.jpg",
+  });
+
+  const snowTexture = useTexture({
+    map: "/textures/snow/Map.png",
+    displacementMap: "/textures/snow/DisplacementMap.png",
+    normalMap: "/textures/snow/NormalMap.png",
+    aoMap: "/textures/snow/AmbientOcclusionMap.jpg",
+  });
+
   const waterTexture = useTexture({
     map: "/textures/water/Map.jpeg",
     displacementMap: "/textures/water/Map.jpeg",
@@ -208,7 +222,7 @@ const Layers = ({
           return (
             <meshPhongMaterial
               color={color}
-              shininess={100}
+              shininess={50}
               {...stitchTexture}
               displacementScale={0}
             />
@@ -234,6 +248,38 @@ const Layers = ({
             />
           );
 
+        case TEXTURE_TYPES.ICE:
+          Object.keys(iceTexture).forEach((key) => {
+            iceTexture[key as keyof typeof iceTexture].wrapS = RepeatWrapping;
+            iceTexture[key as keyof typeof iceTexture].wrapT = RepeatWrapping;
+            iceTexture[key as keyof typeof iceTexture].repeat.x = 8;
+            iceTexture[key as keyof typeof iceTexture].repeat.y = 4;
+          });
+
+          return (
+            <meshStandardMaterial
+              emissive={"lightblue"}
+              emissiveIntensity={0.4}
+              roughness={0.2}
+              {...iceTexture}
+              displacementScale={0}
+            />
+          );
+
+        case TEXTURE_TYPES.WINDY_SNOW:
+          Object.keys(snowTexture).forEach((key) => {
+            snowTexture[key as keyof typeof snowTexture].wrapS = RepeatWrapping;
+            snowTexture[key as keyof typeof snowTexture].repeat.x = 2;
+          });
+
+          return (
+            <meshStandardMaterial
+              roughness={0.5}
+              {...snowTexture}
+              displacementScale={0}
+            />
+          );
+
         case TEXTURE_TYPES.WATER:
           Object.keys(waterTexture).forEach((key) => {
             waterTexture[key as keyof typeof waterTexture].wrapS =
@@ -245,9 +291,9 @@ const Layers = ({
           });
 
           return (
-            <meshPhongMaterial
+            <meshStandardMaterial
               color={"#005eb8"}
-              shininess={100}
+              roughness={0.1}
               {...waterTexture}
               displacementScale={0}
             />
@@ -259,7 +305,15 @@ const Layers = ({
           );
       }
     },
-    [stitchTexture, desertTexture, tracksTexture, pavementTexture, waterTexture]
+    [
+      stitchTexture,
+      desertTexture,
+      tracksTexture,
+      pavementTexture,
+      iceTexture,
+      snowTexture,
+      waterTexture,
+    ]
   );
 
   const getLayers = useCallback(() => {

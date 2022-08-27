@@ -216,7 +216,10 @@ const Layers = ({
           Object.keys(stitchTexture).forEach((key) => {
             stitchTexture[key as keyof typeof stitchTexture].wrapS =
               RepeatWrapping;
-            stitchTexture[key as keyof typeof stitchTexture].repeat.x = 2;
+            stitchTexture[key as keyof typeof stitchTexture].wrapT =
+              RepeatWrapping;
+            stitchTexture[key as keyof typeof stitchTexture].repeat.x = 4;
+            stitchTexture[key as keyof typeof stitchTexture].repeat.y = 2;
           });
 
           return (
@@ -274,6 +277,7 @@ const Layers = ({
 
           return (
             <meshStandardMaterial
+              color={color}
               roughness={0.5}
               {...snowTexture}
               displacementScale={0}

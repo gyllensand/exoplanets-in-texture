@@ -8,6 +8,7 @@ import {
 } from "@react-three/drei";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { a, useSpring } from "@react-spring/three";
 import {
   Mesh,
   PointLight,
@@ -23,32 +24,31 @@ import Mountains from "./components/Mountains";
 import Lake from "./components/Lake";
 import Layers from "./components/Layers";
 import Road from "./components/Road";
-import { TreeInstances, Tree } from "./components/Tree";
 import {
   CLOUDS,
-  COLORS,
-  COLORS_DARK,
-  COLORS_LIGHT,
   MOUNTAINS,
-  SUMMER_TREES,
+  SUMMER_COLORS,
   TEXTURES,
   THEME_COLORS,
+  TREE_COLORS,
+  TREE_THEMES,
 } from "./constants";
 import {
   getRandomNumber,
   pickRandomColorWithTheme,
+  pickRandomDecimalFromInterval,
   pickRandomHash,
   pickRandomIntFromInterval,
   pickRandomSphericalPos,
 } from "./utils";
-import { PineTree, PineTreeInstances } from "./components/PineTree";
-import Sphere from "./components/Sphere";
 import Trees from "./components/Trees/Trees";
-import Stem from "./components/Trees/Stem";
+import { easings } from "react-spring";
+import Crystals from "./components/Crystals";
 
 export const WORLD_SIZE = 0.8;
 
 const colorTheme = pickRandomHash(THEME_COLORS);
+const treeTheme = pickRandomHash(TREE_THEMES);
 const mountains = pickRandomHash(MOUNTAINS);
 const clouds = pickRandomHash(CLOUDS);
 
@@ -73,6 +73,7 @@ const layers = new Array(14).fill(null).map((o, i) => {
   //   i +
   //   (objectMeta[i].coveringIndexes?.length || 0);
 
+  const primaryColor = pickRandomHash(THEME_COLORS);
   const color = pickRandomColorWithTheme(colorTheme, THEME_COLORS, 14);
   const texture = pickRandomHash(TEXTURES);
 
@@ -83,7 +84,7 @@ const layers = new Array(14).fill(null).map((o, i) => {
   };
 });
 
-const getRandomEarthPoints = (count: number) =>
+export const getRandomEarthPoints = (count: number) =>
   new Array(count).fill(null).map(() => pickRandomSphericalPos());
 
 const Scene = () => {
@@ -116,6 +117,23 @@ const Scene = () => {
   const lightRef2 = useRef<PointLight>();
   useHelper(lightRef2, PointLightHelper, 1, "blue");
 
+  const [{ earthPosition }, setIdle] = useSpring(() => ({
+    earthPosition: [0, 0, 0],
+  })) as any;
+
+  useEffect(() => {
+    setIdle.start(() => ({
+      from: {
+        earthPosition: [0, 0, 0],
+      },
+      to: {
+        earthPosition: [0, 0.05, 0],
+      },
+      loop: { reverse: true },
+      config: { easing: easings.easeInOutSine, duration: 5000 },
+    }));
+  }, [setIdle]);
+
   useFrame(({ clock }) => {
     if (lightRef?.current) {
       lightRef.current.position.x =
@@ -127,8 +145,9 @@ const Scene = () => {
 
   const treePoints = useMemo(
     () =>
-      getRandomEarthPoints(50).map((v3) => {
+      getRandomEarthPoints(10).map((v3) => {
         const itemCount = Math.round(pickRandomIntFromInterval(5, 10));
+        const colorLeaves = pickRandomHash(treeTheme);
 
         return new Array(itemCount).fill(null).map((o, i) => ({
           v3: new Vector3(
@@ -136,8 +155,27 @@ const Scene = () => {
             v3.y + getRandomNumber() / 1.75,
             0
           ),
-          colorLeaves: pickRandomHash(SUMMER_TREES),
+          colorLeaves,
           colorStem: "brown",
+          scale: pickRandomDecimalFromInterval(0.5, 1.2),
+        }));
+      }),
+    []
+  );
+
+  const crystalPoints = useMemo(
+    () =>
+      getRandomEarthPoints(3).map((v3) => {
+        const itemCount = Math.round(pickRandomIntFromInterval(2, 6));
+        const color = pickRandomHash(THEME_COLORS);
+
+        return new Array(itemCount).fill(null).map((o, i) => ({
+          v3: new Vector3(
+            v3.x + getRandomNumber() / 1.75,
+            v3.y + getRandomNumber() / 1.75,
+            0
+          ),
+          color,
         }));
       }),
     []
@@ -150,8 +188,11 @@ const Scene = () => {
       {/* <color attach="background" args={["#000000"]} /> */}
       <OrbitControls
         enabled={true}
+        enablePan={false}
         maxPolarAngle={Math.PI * 0.75}
         minPolarAngle={Math.PI * 0.25}
+        // maxDistance={6}
+        // minDistance={2}
       />
       <ambientLight intensity={0.2} />
       <pointLight
@@ -172,29 +213,22 @@ const Scene = () => {
       {/* <fog attach="fog" args={["white", 1, 400]} /> */}
 
       {/* <group rotation={[0, 0, Math.PI / 4]}> */}
-      <group>
+      <a.group position={earthPosition}>
         <Earth color={colorTheme} ref={earthRef} />
-        <House earthRef={earthRef} />
+        {/* <House earthRef={earthRef} /> */}
         <Clouds type={clouds} />
-        {new Array(mountains).fill(null).map((o, i) => (
-          <Mountains key={i} />
+        {crystalPoints.flat().map((o, i) => (
+          <Crystals earthRef={earthRef} data={o} key={i} />
         ))}
+
+        {/* {new Array(mountains).fill(null).map((o, i) => (
+          <Mountains key={i} />
+        ))} */}
         <Trees objects={treePoints.flat()} earthRef={earthRef} />
-        <Stem objects={treePoints.flat()} earthRef={earthRef} />
         {/* <Lake /> */}
         {/* <Road earthRef={earthRef} /> */}
         <Layers earthRef={earthRef} layers={layers} />
-        {/* <TreeInstances>
-          {treePoints.flat().map((o, i) => (
-            <Tree earthRef={earthRef} data={o} key={i} />
-          ))}
-        </TreeInstances> */}
-        {/* <PineTreeInstances>
-          {treePoints.flat().map((o, i) => (
-            <PineTree earthRef={earthRef} v3={o.v3} key={i} />
-          ))}
-        </PineTreeInstances> */}
-      </group>
+      </a.group>
     </>
   );
 };

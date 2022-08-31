@@ -5,7 +5,7 @@ import { Mesh } from "three";
 import { WORLD_SIZE } from "../Scene";
 import { getRandomNumber } from "../utils";
 
-const Clouds = ({ type }: { type: number }) => {
+const Clouds = ({ type, color }: { type: number; color: string }) => {
   const meshRef = useRef<Mesh>();
   const texture = useTexture({
     map: "/textures/clouds/Map.jpeg",
@@ -40,6 +40,7 @@ const Clouds = ({ type }: { type: number }) => {
       <sphereBufferGeometry args={[WORLD_SIZE + 0.02, 64, 64]} />
       <meshStandardMaterial
         attach="material"
+        // color={color}
         depthWrite={false}
         transparent
         opacity={0.2}

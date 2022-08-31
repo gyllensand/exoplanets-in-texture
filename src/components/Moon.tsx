@@ -1,16 +1,21 @@
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Mesh } from "three";
+import { pickRandomDecimalFromInterval } from "../utils";
 
-const Moon = ({ secondaryColorTheme }: { secondaryColorTheme: string }) => {
+const Moon = ({ color, index }: { color: string; index: number }) => {
   const meshRef = useRef<Mesh>();
   const texture = useTexture({
-    map: "/textures/moss/Map.png",
     displacementMap: "/textures/moss/DisplacementMap.png",
     normalMap: "/textures/moss/NormalMap.png",
     aoMap: "/textures/moss/AmbientOcclusionMap.png",
   });
+  const scale = useMemo(() => pickRandomDecimalFromInterval(0.04, 0.08), []);
+  const rotationX = useMemo(() => pickRandomDecimalFromInterval(1, 2), []);
+  const rotationY = useMemo(() => pickRandomDecimalFromInterval(1, 2), []);
+  const rotationZ = useMemo(() => pickRandomDecimalFromInterval(1, 2), []);
+  const displacementScale = useMemo(() => pickRandomDecimalFromInterval(0.02, 0.05), []);
 
   useFrame(({ clock }) => {
     if (!meshRef.current) {
@@ -18,9 +23,9 @@ const Moon = ({ secondaryColorTheme }: { secondaryColorTheme: string }) => {
     }
 
     meshRef.current.position.set(
-      Math.cos(clock.getElapsedTime() / 2),
-      Math.sin(clock.getElapsedTime() / 2),
-      Math.sin(clock.getElapsedTime())
+      Math.cos(clock.getElapsedTime() / 4) * rotationX,
+      Math.sin(clock.getElapsedTime() / 4) * rotationY,
+      Math.sin(clock.getElapsedTime() / 2) * rotationZ
     );
 
     meshRef.current.rotation.set(
@@ -31,14 +36,14 @@ const Moon = ({ secondaryColorTheme }: { secondaryColorTheme: string }) => {
   });
 
   return (
-    <mesh ref={meshRef} receiveShadow position={[0, 0, 1]}>
-      <sphereBufferGeometry args={[0.08, 64, 64]} />
+    <mesh ref={meshRef} receiveShadow>
+      <sphereBufferGeometry args={[scale, 64, 64]} />
       <meshStandardMaterial
         attach="material"
-        emissive={secondaryColorTheme}
-        emissiveIntensity={0.05}
+        color={color}
         {...texture}
-        displacementScale={0.03}
+        displacementScale={displacementScale}
+        roughness={0.7}
       />
     </mesh>
   );

@@ -28,6 +28,8 @@ const Earth = forwardRef<Mesh<SphereBufferGeometry>, { color: string }>(
           // color={color}
           // emissive={color}
           // emissiveIntensity={0.2}
+          // transparent
+          // opacity={0.9}
           {...texture}
           displacementScale={0.01}
         />

@@ -15,7 +15,7 @@ const Bird = () => {
     meshRef.current.position.set(
       Math.cos(clock.getElapsedTime() / 2),
       Math.sin(clock.getElapsedTime() / 2),
-      Math.sin(clock.getElapsedTime())
+      0
     );
 
     // pivotPoint.rotation.y += 0.05;
@@ -23,8 +23,8 @@ const Bird = () => {
 
   return (
     <mesh ref={meshRef} receiveShadow position={[0, 0, 0]}>
-      <sphereBufferGeometry args={[0.1, 64, 64]} />
-      <meshStandardMaterial attach="material" />
+      <sphereBufferGeometry args={[0.02, 64, 64]} />
+      <meshStandardMaterial attach="material" color="blue" />
     </mesh>
   );
 };

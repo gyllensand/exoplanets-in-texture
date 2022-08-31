@@ -1,5 +1,12 @@
+import { useTexture } from "@react-three/drei";
 import { RefObject, useEffect, useMemo, useRef } from "react";
-import { Group, Mesh, PointLight, SphereBufferGeometry, Vector3 } from "three";
+import {
+  Group,
+  Mesh,
+  SphereBufferGeometry,
+  Vector3,
+  RepeatWrapping,
+} from "three";
 import { WORLD_SIZE } from "../Scene";
 import { getRandomNumber, pickRandomDecimalFromInterval } from "../utils";
 
@@ -18,6 +25,18 @@ const Crystals = ({
   const groupRef = useRef<Group>();
   const size = useMemo(() => pickRandomDecimalFromInterval(0.02, 0.04), []);
   const rotation = useMemo(() => getRandomNumber() * 5, []);
+
+  const texture = useTexture({
+    normalMap: "/textures/ice/NormalMap.jpg",
+    aoMap: "/textures/ice/AmbientOcclusionMap.jpg",
+  });
+
+  Object.keys(texture).forEach((key) => {
+    texture[key as keyof typeof texture].wrapS = RepeatWrapping;
+    texture[key as keyof typeof texture].wrapT = RepeatWrapping;
+    texture[key as keyof typeof texture].repeat.x = 2;
+    texture[key as keyof typeof texture].repeat.y = 2;
+  });
 
   useEffect(() => {
     if (!groupRef.current || !earthRef?.current) {
@@ -48,6 +67,8 @@ const Crystals = ({
             roughness={0.3}
             metalness={1.5}
             color={data.color}
+            {...texture}
+            displacementScale={0}
           />
         </mesh>
         <mesh
@@ -62,6 +83,8 @@ const Crystals = ({
             roughness={0.3}
             metalness={1.5}
             color={data.color}
+            {...texture}
+            displacementScale={0}
           />
         </mesh>
       </group>

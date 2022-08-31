@@ -1,10 +1,9 @@
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, RefObject, useEffect, useCallback, useMemo } from "react";
-import { Mesh, RepeatWrapping, SphereBufferGeometry, Vector3 } from "three";
+import { Mesh, RepeatWrapping, SphereBufferGeometry } from "three";
 import { TEXTURE_TYPES } from "../constants";
 import { WORLD_SIZE } from "../Scene";
-import { getRandomNumber } from "../utils";
 
 interface Layer {
   color: string;
@@ -74,7 +73,7 @@ const Layers = ({
   });
 
   const checkerboardTexture = useTexture({
-    map: "/textures/checkerboard/Map.png",
+    // map: "/textures/checkerboard/Map.png",
     displacementMap: "/textures/checkerboard/DisplacementMap.png",
     normalMap: "/textures/checkerboard/NormalMap.png",
     aoMap: "/textures/checkerboard/AmbientOcclusionMap.png",
@@ -340,10 +339,10 @@ const Layers = ({
               RepeatWrapping;
             checkerboardTexture[
               key as keyof typeof checkerboardTexture
-            ].repeat.x = 16;
+            ].repeat.x = 32;
             checkerboardTexture[
               key as keyof typeof checkerboardTexture
-            ].repeat.y = 8;
+            ].repeat.y = 16;
           });
 
           return (

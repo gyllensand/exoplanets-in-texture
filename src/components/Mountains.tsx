@@ -5,7 +5,8 @@ import { getRandomNumber, pickRandomDecimalFromInterval } from "../utils";
 
 const Mountains = () => {
   const texture = useTexture({
-    map: "/textures/mountains/1/Map.png",
+    // map: "/textures/mountains/1/Map.png",
+    map: "/textures/moss/DisplacementMap.png",
     displacementMap: "/textures/mountains/1/DisplacementMap.jpg",
     normalMap: "/textures/mountains/1/NormalMap.jpg",
     aoMap: "/textures/mountains/1/AmbientOcclusionMap.jpg",
@@ -21,11 +22,12 @@ const Mountains = () => {
       <sphereBufferGeometry
         args={[WORLD_SIZE - depth, 64, 64, 0, size, 1, size]}
       />
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         attach="material"
         roughness={0.8}
         {...texture}
         displacementScale={1}
+        reflectivity={1}
       />
     </mesh>
   );

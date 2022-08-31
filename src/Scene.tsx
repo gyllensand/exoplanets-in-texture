@@ -1,20 +1,11 @@
-import {
-  GradientTexture,
-  OrbitControls,
-  Backdrop,
-  useHelper,
-  useTexture,
-  RoundedBox,
-} from "@react-three/drei";
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { a, useSpring } from "@react-spring/three";
+import { OrbitControls, useHelper } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
 import {
   Group,
   Mesh,
   PointLight,
   PointLightHelper,
-  RepeatWrapping,
   SphereBufferGeometry,
   Vector3,
 } from "three";
@@ -27,12 +18,21 @@ import Layers from "./components/Layers";
 import Road from "./components/Road";
 import {
   CLOUDS,
+  MOONS,
   MOUNTAINS,
-  SUMMER_COLORS,
-  TEXTURES,
+  MIXED_TEXTURES,
   THEME_COLORS,
-  TREE_COLORS,
   TREE_THEMES,
+  EARTHS,
+  EARTH_TYPES,
+  DRY_COLORS,
+  DRY_TEXTURES,
+  WET_TEXTURES,
+  VEGETATIVE_COLORS,
+  VEGETATIVE_TEXTURES,
+  WET_COLORS,
+  RESP_TEXTURES,
+  RESP_COLORS,
 } from "./constants";
 import {
   getRandomNumber,
@@ -44,18 +44,44 @@ import {
   pickRandomTextureWithTheme,
 } from "./utils";
 import Trees from "./components/Trees/Trees";
-import { easings } from "react-spring";
 import Crystals from "./components/Crystals";
 import Bird from "./components/Bird";
 import Moon from "./components/Moon";
 
 export const WORLD_SIZE = 0.8;
 
-const primaryTexture = pickRandomIntFromInterval(0, 7);
-const colorTheme = pickRandomHash(THEME_COLORS);
-const secondaryColorTheme = pickRandomHash(THEME_COLORS);
+const earthType = pickRandomHash(EARTHS);
+let colorTheme: string;
+let secondaryColorTheme: string;
+let primaryTexture: number;
+
+switch (earthType) {
+  case EARTH_TYPES.DRY:
+    colorTheme = pickRandomHash(DRY_COLORS);
+    secondaryColorTheme = pickRandomHash(DRY_COLORS);
+    primaryTexture = pickRandomHash(DRY_TEXTURES);
+    break;
+  case EARTH_TYPES.WET:
+    colorTheme = pickRandomHash(WET_COLORS);
+    secondaryColorTheme = pickRandomHash(WET_COLORS);
+    primaryTexture = pickRandomHash(WET_TEXTURES);
+    break;
+  case EARTH_TYPES.VEGETATIVE:
+    colorTheme = pickRandomHash(VEGETATIVE_COLORS);
+    secondaryColorTheme = pickRandomHash(VEGETATIVE_COLORS);
+    primaryTexture = pickRandomHash(VEGETATIVE_TEXTURES);
+    break;
+
+  default:
+    colorTheme = pickRandomHash(THEME_COLORS);
+    secondaryColorTheme = pickRandomHash(THEME_COLORS);
+    primaryTexture = pickRandomHash(MIXED_TEXTURES);
+    break;
+}
+
 const treeTheme = pickRandomHash(TREE_THEMES);
 const mountains = pickRandomHash(MOUNTAINS);
+const moons = pickRandomHash(MOONS);
 const clouds = pickRandomHash(CLOUDS);
 
 // @ts-ignore
@@ -79,9 +105,16 @@ const layers = new Array(14).fill(null).map((o, i) => {
   //   i +
   //   (objectMeta[i].coveringIndexes?.length || 0);
 
-  const primaryColor = pickRandomHash(THEME_COLORS);
-  const texture = pickRandomTextureWithTheme(primaryTexture, TEXTURES, 14);
-  const color = pickRandomColorWithTheme(colorTheme, THEME_COLORS, 25);
+  const texture = pickRandomTextureWithTheme(
+    primaryTexture,
+    RESP_TEXTURES[earthType],
+    14
+  );
+  const color = pickRandomColorWithTheme(
+    colorTheme,
+    RESP_COLORS[earthType],
+    25
+  );
 
   return {
     index: i,
@@ -125,11 +158,18 @@ const Scene = () => {
   useHelper(lightRef2, PointLightHelper, 1, "blue");
 
   useFrame(({ clock }) => {
+    // if (lightRef?.current) {
+    //   lightRef.current.position.x =
+    //     -2 + Math.sin(clock.getElapsedTime() / 2) * -5;
+    //   lightRef.current.position.y =
+    //     2 + Math.cos(clock.getElapsedTime() / 2) * -5;
+    // }
     if (lightRef?.current) {
-      lightRef.current.position.x =
-        -2 + Math.sin(clock.getElapsedTime() / 2) * -5;
-      lightRef.current.position.y =
-        2 + Math.cos(clock.getElapsedTime() / 2) * -5;
+      lightRef.current.position.set(
+        Math.cos(clock.getElapsedTime() / 4) * 5,
+        Math.sin(clock.getElapsedTime() / 8) * 2,
+        Math.sin(clock.getElapsedTime() / 4) * 5
+      );
     }
 
     if (groupRef.current) {
@@ -154,7 +194,7 @@ const Scene = () => {
             0
           ),
           colorLeaves,
-          colorStem: "brown",
+          colorStem: "#aa4807",
           scale: pickRandomDecimalFromInterval(0.3, 1),
         }));
       }),
@@ -196,7 +236,7 @@ const Scene = () => {
       <pointLight
         ref={lightRef}
         intensity={2}
-        position={[-2, 2, 10]}
+        // position={[-2, 2, 10]}
         color="#FCEEB5"
         castShadow
         shadow-mapSize-width={512}
@@ -214,12 +254,15 @@ const Scene = () => {
       <group ref={groupRef}>
         <Earth color={colorTheme} ref={earthRef} />
         {/* <House earthRef={earthRef} /> */}
-        <Moon secondaryColorTheme={secondaryColorTheme} />
-        <Clouds type={clouds} />
+
+        <Clouds type={clouds} color={colorTheme} />
+        <Bird />
         {crystalPoints.flat().map((o, i) => (
           <Crystals earthRef={earthRef} data={o} key={i} />
         ))}
-
+        {new Array(moons).fill(null).map((o, i) => (
+          <Moon color={secondaryColorTheme} index={i} key={i} />
+        ))}
         {new Array(mountains).fill(null).map((o, i) => (
           <Mountains key={i} />
         ))}

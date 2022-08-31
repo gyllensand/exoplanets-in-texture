@@ -1,4 +1,5 @@
 import { MathUtils, Vector3 } from "three";
+import { TEXTURE_TYPES } from "./constants";
 
 declare const fxrand: () => number;
 
@@ -96,9 +97,29 @@ export const pickRandomColorWithTheme = (
   return pickRandomHash([...primaryColor, ...theme]);
 };
 
+export const pickRandomTextureWithTheme = (
+  texture: TEXTURE_TYPES,
+  theme: number[],
+  count: number
+) => {
+  const primaryTexture = new Array(count * 2).fill(null).map(() => texture);
+
+  return pickRandomHash([...primaryTexture, ...theme]);
+};
+
 export const easeInOutSine = (t: number, b: number, _c: number, d: number) => {
-  var c = _c - b;
+  const c = _c - b;
   return (-c / 2) * (Math.cos((Math.PI * t) / d) - 1) + b;
+};
+
+export const getSmoothRandom = (factor: number, start: number) => {
+  let last = start !== undefined ? start : getRandomNumber();
+  const halfEnvelope = 1 / factor / 2;
+  return function () {
+    const max = Math.min(1, last + halfEnvelope);
+    const min = Math.max(0, last - halfEnvelope);
+    return (last = getRandomNumber() * (max - min) + min);
+  };
 };
 
 export const minMaxNumber = (value: number, min: number, max: number) =>

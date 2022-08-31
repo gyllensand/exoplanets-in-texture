@@ -39,28 +39,28 @@ const Crystals = ({
         <mesh
           receiveShadow
           position={[-1, 1, 4.6]}
-          scale={[3, 1, 1]}
+          scale={[3, 0.8, 0.8]}
           rotation={[-Math.PI / 2, 12, Math.PI / 2]}
         >
           <dodecahedronBufferGeometry args={[1, 0]} />
           <meshStandardMaterial
             attach="material"
-            roughness={0.5}
-            metalness={2}
+            roughness={0.3}
+            metalness={1.5}
             color={data.color}
           />
         </mesh>
         <mesh
           receiveShadow
           position={[0, 0.7, 5.3]}
-          scale={[1, 1, 1]}
+          scale={[0.8, 0.8, 0.8]}
           rotation={[-Math.PI / 2, 0, Math.PI / 2]}
         >
           <dodecahedronBufferGeometry args={[1, 0]} />
           <meshStandardMaterial
             attach="material"
-            roughness={0.5}
-            metalness={2}
+            roughness={0.3}
+            metalness={1.5}
             color={data.color}
           />
         </mesh>

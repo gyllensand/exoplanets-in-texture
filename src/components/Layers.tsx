@@ -73,6 +73,33 @@ const Layers = ({
     aoMap: "/textures/water/AmbientOcclusionMap.jpg",
   });
 
+  const checkerboardTexture = useTexture({
+    map: "/textures/checkerboard/Map.png",
+    displacementMap: "/textures/checkerboard/DisplacementMap.png",
+    normalMap: "/textures/checkerboard/NormalMap.png",
+    aoMap: "/textures/checkerboard/AmbientOcclusionMap.png",
+  });
+
+  const sandTexture = useTexture({
+    map: "/textures/sand/Map.png",
+    displacementMap: "/textures/sand/DisplacementMap.png",
+    normalMap: "/textures/sand/NormalMap.png",
+    aoMap: "/textures/sand/AmbientOcclusionMap.png",
+  });
+
+  const mossTexture = useTexture({
+    map: "/textures/moss/Map.png",
+    displacementMap: "/textures/moss/DisplacementMap.png",
+    normalMap: "/textures/moss/NormalMap.png",
+    aoMap: "/textures/moss/AmbientOcclusionMap.png",
+  });
+
+  const cobblestoneTexture = useTexture({
+    displacementMap: "/textures/cobblestone/DisplacementMap.png",
+    normalMap: "/textures/cobblestone/NormalMap.png",
+    aoMap: "/textures/cobblestone/AmbientOcclusionMap.png",
+  });
+
   useEffect(() => {
     if (!earthRef?.current || !meshRef?.current) {
       return;
@@ -272,13 +299,15 @@ const Layers = ({
         case TEXTURE_TYPES.WINDY_SNOW:
           Object.keys(snowTexture).forEach((key) => {
             snowTexture[key as keyof typeof snowTexture].wrapS = RepeatWrapping;
-            snowTexture[key as keyof typeof snowTexture].repeat.x = 2;
+            snowTexture[key as keyof typeof snowTexture].wrapT = RepeatWrapping;
+            snowTexture[key as keyof typeof snowTexture].repeat.x = 4;
+            snowTexture[key as keyof typeof snowTexture].repeat.y = 2;
           });
 
           return (
             <meshStandardMaterial
               color={color}
-              roughness={0.5}
+              roughness={0.6}
               {...snowTexture}
               displacementScale={0}
             />
@@ -303,6 +332,81 @@ const Layers = ({
             />
           );
 
+        case TEXTURE_TYPES.CHECKERBOARD:
+          Object.keys(checkerboardTexture).forEach((key) => {
+            checkerboardTexture[key as keyof typeof checkerboardTexture].wrapS =
+              RepeatWrapping;
+            checkerboardTexture[key as keyof typeof checkerboardTexture].wrapT =
+              RepeatWrapping;
+            checkerboardTexture[
+              key as keyof typeof checkerboardTexture
+            ].repeat.x = 16;
+            checkerboardTexture[
+              key as keyof typeof checkerboardTexture
+            ].repeat.y = 8;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.5}
+              {...checkerboardTexture}
+              displacementScale={0}
+            />
+          );
+
+        case TEXTURE_TYPES.SAND:
+          Object.keys(sandTexture).forEach((key) => {
+            sandTexture[key as keyof typeof sandTexture].wrapS = RepeatWrapping;
+            sandTexture[key as keyof typeof sandTexture].repeat.x = 2;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.5}
+              {...sandTexture}
+              displacementScale={0}
+            />
+          );
+
+        case TEXTURE_TYPES.MOSS:
+          Object.keys(mossTexture).forEach((key) => {
+            mossTexture[key as keyof typeof mossTexture].wrapS = RepeatWrapping;
+            mossTexture[key as keyof typeof mossTexture].repeat.x = 2;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.8}
+              {...mossTexture}
+              displacementScale={0}
+            />
+          );
+
+        case TEXTURE_TYPES.COBBLESTONE:
+          Object.keys(cobblestoneTexture).forEach((key) => {
+            cobblestoneTexture[key as keyof typeof cobblestoneTexture].wrapS =
+              RepeatWrapping;
+            cobblestoneTexture[
+              key as keyof typeof cobblestoneTexture
+            ].repeat.x = 2;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.8}
+              {...cobblestoneTexture}
+              displacementScale={0}
+            />
+          );
+
         default:
           return (
             <meshStandardMaterial color={color} transparent opacity={0.5} />
@@ -317,6 +421,10 @@ const Layers = ({
       iceTexture,
       snowTexture,
       waterTexture,
+      checkerboardTexture,
+      sandTexture,
+      mossTexture,
+      cobblestoneTexture,
     ]
   );
 

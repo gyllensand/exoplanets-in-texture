@@ -1,13 +1,15 @@
+import { useTexture } from "@react-three/drei";
 import { useMemo, useRef, useEffect, RefObject } from "react";
 import {
   Color,
   Object3D,
   InstancedMesh,
-  Vector3,
   Mesh,
   SphereBufferGeometry,
+  RepeatWrapping,
 } from "three";
 import { WORLD_SIZE } from "../../Scene";
+import { getRandomNumber } from "../../utils";
 import { TreeData } from "./Trees";
 
 const Leaves = ({
@@ -20,8 +22,6 @@ const Leaves = ({
   const tempColor = useMemo(() => new Color(), []);
   const tempObject = useMemo(() => new Object3D(), []);
   const meshRef = useRef<InstancedMesh>();
-  const meshRef2 = useRef<InstancedMesh>();
-  const meshRef3 = useRef<InstancedMesh>();
   const colorArray = useMemo(
     () =>
       Float32Array.from(
@@ -43,65 +43,50 @@ const Leaves = ({
         return;
       }
 
+      const rotationX = getRandomNumber() * 5;
+
       tempObject.position.setFromSphericalCoords(
-        WORLD_SIZE + 0.1,
+        WORLD_SIZE + o.scale / 10,
         o.v3.y,
         o.v3.x
       );
-      // tempObject.scale.set(o.leafScale, o.leafScale, o.leafScale);
-      tempObject.scale.set(o.scale, o.scale, o.scale);
-      // tempObject.rotation.set(Math.PI / 2, 0, 0);
 
+      tempObject.scale.set(o.scale, o.scale, o.scale / 1.5);
+      tempObject.rotation.set(0, 0, rotationX);
+      tempObject.lookAt(earthRef.current.position);
       tempObject.updateMatrix();
       meshRef.current.setMatrixAt(i, tempObject.matrix);
-      // meshRef.current.lookAt(earthRef.current.position);
     });
 
     meshRef.current.instanceMatrix.needsUpdate = true;
   }, [earthRef, objects, tempObject]);
 
+  const texture = useTexture({
+    normalMap: "/textures/desert/NormalMap.jpg",
+    aoMap: "/textures/desert/AmbientOcclusionMap.jpg",
+  });
+
+  Object.keys(texture).forEach((key) => {
+    texture[key as keyof typeof texture].wrapS = RepeatWrapping;
+    texture[key as keyof typeof texture].wrapT = RepeatWrapping;
+    texture[key as keyof typeof texture].repeat.x = 2;
+    texture[key as keyof typeof texture].repeat.y = 2;
+  });
+
   return (
-    <>
-      <instancedMesh
-        ref={meshRef}
-        receiveShadow
-        args={[undefined, undefined, objects.length]}
-      >
-        <icosahedronBufferGeometry attach="geometry" args={[0.03, 0]}>
-          <instancedBufferAttribute
-            attachObject={["attributes", "color"]}
-            args={[colorArray, 3]}
-          />
-        </icosahedronBufferGeometry>
-        <meshPhongMaterial vertexColors shininess={50} />
-      </instancedMesh>
-      {/* <instancedMesh
-        ref={meshRef2}
-        receiveShadow
-        args={[undefined, undefined, objects.length]}
-      >
-        <sphereBufferGeometry attach="geometry" args={[0.015, 4, 4]}>
-          <instancedBufferAttribute
-            attachObject={["attributes", "color"]}
-            args={[colorArray, 3]}
-          />
-        </sphereBufferGeometry>
-        <meshStandardMaterial vertexColors />
-      </instancedMesh>
-      <instancedMesh
-        ref={meshRef3}
-        receiveShadow
-        args={[undefined, undefined, objects.length]}
-      >
-        <sphereBufferGeometry attach="geometry" args={[0.01, 4, 4]}>
-          <instancedBufferAttribute
-            attachObject={["attributes", "color"]}
-            args={[colorArray, 3]}
-          />
-        </sphereBufferGeometry>
-        <meshStandardMaterial vertexColors />
-      </instancedMesh> */}
-    </>
+    <instancedMesh
+      ref={meshRef}
+      receiveShadow
+      args={[undefined, undefined, objects.length]}
+    >
+      <icosahedronBufferGeometry attach="geometry" args={[0.025, 0]}>
+        <instancedBufferAttribute
+          attachObject={["attributes", "color"]}
+          args={[colorArray, 3]}
+        />
+      </icosahedronBufferGeometry>
+      <meshStandardMaterial vertexColors {...texture} />
+    </instancedMesh>
   );
 };
 

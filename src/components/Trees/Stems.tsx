@@ -46,14 +46,8 @@ const Stems = ({
         o.v3.y,
         o.v3.x
       );
-      // tempObject.scale.set(0.03, 0.03, o.scale);
-      tempObject.scale.set(0.03, 0.03, 1);
+      tempObject.scale.set(0.03, 0.03, o.scale);
       tempObject.lookAt(earthRef.current.position);
-      // tempObject.rotation.set(
-      //   tempObject.rotation.x,
-      //   tempObject.rotation.y,
-      //   tempObject.rotation.z
-      // );
       tempObject.updateMatrix();
 
       meshRef.current.setMatrixAt(i, tempObject.matrix);

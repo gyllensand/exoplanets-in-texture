@@ -1,4 +1,4 @@
-export const MOUNTAINS = [1, 2, 3, 4];
+export const MOUNTAINS = [1, 2, 3];
 export const CLOUDS = [0, 1];
 
 export enum TEXTURE_TYPES {
@@ -10,17 +10,25 @@ export enum TEXTURE_TYPES {
   ICE = 5,
   WINDY_SNOW = 6,
   WATER = 7,
+  CHECKERBOARD = 8,
+  SAND = 9,
+  MOSS = 10,
+  COBBLESTONE = 11
 }
 
 export const TEXTURES = [
-  ...new Array(10).fill(null).map(() => 0),
-  ...new Array(2).fill(null).map(() => 1),
-  ...new Array(2).fill(null).map(() => 2),
+  ...new Array(15).fill(null).map(() => 0),
+  ...new Array(3).fill(null).map(() => 1),
+  ...new Array(3).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
-  ...new Array(2).fill(null).map(() => 4),
-  ...new Array(2).fill(null).map(() => 5),
-  ...new Array(2).fill(null).map(() => 6),
-  ...new Array(2).fill(null).map(() => 7),
+  ...new Array(3).fill(null).map(() => 4),
+  ...new Array(1).fill(null).map(() => 5),
+  ...new Array(3).fill(null).map(() => 6),
+  ...new Array(1).fill(null).map(() => 7),
+  ...new Array(3).fill(null).map(() => 8),
+  ...new Array(3).fill(null).map(() => 9),
+  ...new Array(3).fill(null).map(() => 10),
+  ...new Array(3).fill(null).map(() => 11),
 ];
 
 export const THEME_COLORS = [

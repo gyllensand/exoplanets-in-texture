@@ -10,6 +10,7 @@ import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { a, useSpring } from "@react-spring/three";
 import {
+  Group,
   Mesh,
   PointLight,
   PointLightHelper,
@@ -40,14 +41,19 @@ import {
   pickRandomHash,
   pickRandomIntFromInterval,
   pickRandomSphericalPos,
+  pickRandomTextureWithTheme,
 } from "./utils";
 import Trees from "./components/Trees/Trees";
 import { easings } from "react-spring";
 import Crystals from "./components/Crystals";
+import Bird from "./components/Bird";
+import Moon from "./components/Moon";
 
 export const WORLD_SIZE = 0.8;
 
+const primaryTexture = pickRandomIntFromInterval(0, 7);
 const colorTheme = pickRandomHash(THEME_COLORS);
+const secondaryColorTheme = pickRandomHash(THEME_COLORS);
 const treeTheme = pickRandomHash(TREE_THEMES);
 const mountains = pickRandomHash(MOUNTAINS);
 const clouds = pickRandomHash(CLOUDS);
@@ -74,8 +80,8 @@ const layers = new Array(14).fill(null).map((o, i) => {
   //   (objectMeta[i].coveringIndexes?.length || 0);
 
   const primaryColor = pickRandomHash(THEME_COLORS);
-  const color = pickRandomColorWithTheme(colorTheme, THEME_COLORS, 14);
-  const texture = pickRandomHash(TEXTURES);
+  const texture = pickRandomTextureWithTheme(primaryTexture, TEXTURES, 14);
+  const color = pickRandomColorWithTheme(colorTheme, THEME_COLORS, 25);
 
   return {
     index: i,
@@ -95,6 +101,7 @@ const Scene = () => {
     gl: state.gl,
   }));
 
+  const groupRef = useRef<Group>(null);
   const earthRef = useRef<Mesh<SphereBufferGeometry>>(null);
 
   // const toneInitialized = useRef(false);
@@ -117,23 +124,6 @@ const Scene = () => {
   const lightRef2 = useRef<PointLight>();
   useHelper(lightRef2, PointLightHelper, 1, "blue");
 
-  const [{ earthPosition }, setIdle] = useSpring(() => ({
-    earthPosition: [0, 0, 0],
-  })) as any;
-
-  useEffect(() => {
-    setIdle.start(() => ({
-      from: {
-        earthPosition: [0, 0, 0],
-      },
-      to: {
-        earthPosition: [0, 0.05, 0],
-      },
-      loop: { reverse: true },
-      config: { easing: easings.easeInOutSine, duration: 5000 },
-    }));
-  }, [setIdle]);
-
   useFrame(({ clock }) => {
     if (lightRef?.current) {
       lightRef.current.position.x =
@@ -141,12 +131,20 @@ const Scene = () => {
       lightRef.current.position.y =
         2 + Math.cos(clock.getElapsedTime() / 2) * -5;
     }
+
+    if (groupRef.current) {
+      groupRef.current.position.set(
+        Math.sin(clock.getElapsedTime()) / 100,
+        Math.cos(clock.getElapsedTime() / 2) / 20,
+        0
+      );
+    }
   });
 
   const treePoints = useMemo(
     () =>
       getRandomEarthPoints(10).map((v3) => {
-        const itemCount = Math.round(pickRandomIntFromInterval(5, 10));
+        const itemCount = Math.round(pickRandomIntFromInterval(10, 25));
         const colorLeaves = pickRandomHash(treeTheme);
 
         return new Array(itemCount).fill(null).map((o, i) => ({
@@ -157,7 +155,7 @@ const Scene = () => {
           ),
           colorLeaves,
           colorStem: "brown",
-          scale: pickRandomDecimalFromInterval(0.5, 1.2),
+          scale: pickRandomDecimalFromInterval(0.3, 1),
         }));
       }),
     []
@@ -213,22 +211,23 @@ const Scene = () => {
       {/* <fog attach="fog" args={["white", 1, 400]} /> */}
 
       {/* <group rotation={[0, 0, Math.PI / 4]}> */}
-      <a.group position={earthPosition}>
+      <group ref={groupRef}>
         <Earth color={colorTheme} ref={earthRef} />
         {/* <House earthRef={earthRef} /> */}
+        <Moon secondaryColorTheme={secondaryColorTheme} />
         <Clouds type={clouds} />
         {crystalPoints.flat().map((o, i) => (
           <Crystals earthRef={earthRef} data={o} key={i} />
         ))}
 
-        {/* {new Array(mountains).fill(null).map((o, i) => (
+        {new Array(mountains).fill(null).map((o, i) => (
           <Mountains key={i} />
-        ))} */}
+        ))}
         <Trees objects={treePoints.flat()} earthRef={earthRef} />
         {/* <Lake /> */}
         {/* <Road earthRef={earthRef} /> */}
         <Layers earthRef={earthRef} layers={layers} />
-      </a.group>
+      </group>
     </>
   );
 };

@@ -1,6 +1,6 @@
 export const MOUNTAINS_AMOUNT = [0, 1, 2, 3];
 export const MOUNTAIN_TYPES = [1, 2];
-export const PARTICLES_AMOUNT = [0, 0, 0, 500, 1000, 1500, 2000];
+export const PARTICLES_AMOUNT = [0, 0, 250, 500];
 export const MOONS = [0, 1];
 export const CLOUD_TYPES = [0, 1];
 export const PYRAMIDS_AMOUNT = [0, 1, 2, 3, 4];
@@ -31,9 +31,9 @@ export enum EARTH_TYPES {
 }
 
 export const EARTHS = [
-  // ...new Array(20).fill(null).map(() => 0),
-  // ...new Array(1).fill(null).map(() => 1),
-  // ...new Array(1).fill(null).map(() => 2),
+  ...new Array(6).fill(null).map(() => 0),
+  ...new Array(1).fill(null).map(() => 1),
+  ...new Array(1).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
 ];
 
@@ -61,7 +61,7 @@ export const MIXED_TEXTURES = [
   ...new Array(3).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
   ...new Array(3).fill(null).map(() => 4),
-  // ...new Array(1).fill(null).map(() => 5),
+  ...new Array(1).fill(null).map(() => 5),
   ...new Array(3).fill(null).map(() => 6),
   ...new Array(1).fill(null).map(() => 7),
   ...new Array(3).fill(null).map(() => 8),

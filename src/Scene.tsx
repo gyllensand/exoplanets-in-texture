@@ -2,7 +2,6 @@ import { Float, OrbitControls, useHelper } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import {
-  Group,
   Mesh,
   PointLight,
   PointLightHelper,
@@ -40,6 +39,7 @@ import {
 } from "./constants";
 import {
   getRandomNumber,
+  getSizeByAspect,
   pickRandomColorWithTheme,
   pickRandomDecimalFromInterval,
   pickRandomHash,
@@ -138,15 +138,13 @@ export const getRandomEarthPoints = (count: number) =>
   new Array(count).fill(null).map(() => pickRandomSphericalPos());
 
 const Scene = () => {
+  const earthRef = useRef<Mesh<SphereBufferGeometry>>(null);
   const { viewport, aspect, scene, gl } = useThree((state) => ({
     viewport: state.viewport,
     aspect: state.viewport.aspect,
     scene: state.scene,
     gl: state.gl,
   }));
-
-  const groupRef = useRef<Group>(null);
-  const earthRef = useRef<Mesh<SphereBufferGeometry>>(null);
 
   // const toneInitialized = useRef(false);
 
@@ -165,16 +163,7 @@ const Scene = () => {
   const lightRef = useRef<PointLight>();
   useHelper(lightRef, PointLightHelper, 1, "red");
 
-  const lightRef2 = useRef<PointLight>();
-  useHelper(lightRef2, PointLightHelper, 1, "blue");
-
   useFrame(({ clock }) => {
-    // if (lightRef?.current) {
-    //   lightRef.current.position.x =
-    //     -2 + Math.sin(clock.getElapsedTime() / 2) * -5;
-    //   lightRef.current.position.y =
-    //     2 + Math.cos(clock.getElapsedTime() / 2) * -5;
-    // }
     if (lightRef?.current) {
       lightRef.current.position.set(
         Math.cos(clock.getElapsedTime() / 4) * 10,
@@ -182,14 +171,6 @@ const Scene = () => {
         Math.sin(clock.getElapsedTime() / 4) * 10
       );
     }
-
-    // if (groupRef.current) {
-    //   groupRef.current.position.set(
-    //     Math.sin(clock.getElapsedTime()) / 100,
-    //     Math.cos(clock.getElapsedTime() / 2) / 20,
-    //     0
-    //   );
-    // }
   });
 
   const treePoints = useMemo(
@@ -234,6 +215,7 @@ const Scene = () => {
     () =>
       getRandomEarthPoints(pyramids).map((v3) => {
         const color = pickRandomHash(RESP_COLORS[earthType]);
+        const size = pickRandomDecimalFromInterval(0.075, 0.1);
 
         return {
           v3: new Vector3(
@@ -242,6 +224,7 @@ const Scene = () => {
             0
           ),
           color,
+          size,
         };
       }),
     []
@@ -261,7 +244,14 @@ const Scene = () => {
         minDistance={2}
       />
       <ambientLight intensity={0.2} />
-      <group rotation={[0, sunRotation, 0]}>
+      <group
+        scale={[
+          getSizeByAspect(1, aspect),
+          getSizeByAspect(1, aspect),
+          getSizeByAspect(1, aspect),
+        ]}
+        rotation={[0, sunRotation, 0]}
+      >
         <pointLight
           ref={lightRef}
           intensity={2}
@@ -280,13 +270,19 @@ const Scene = () => {
 
       <Particles count={particles} />
       <Float speed={1} rotationIntensity={1} floatIntensity={0.5}>
-        <group ref={groupRef} rotation={[0, earthRotation, 0]}>
+        <group
+          scale={[
+            getSizeByAspect(1, aspect),
+            getSizeByAspect(1, aspect),
+            getSizeByAspect(1, aspect),
+          ]}
+          rotation={[0, earthRotation, 0]}
+        >
           <Earth color={colorTheme} ref={earthRef} />
 
           {pyramidPoints.flat().map((o, i) => (
             <Pyramids earthRef={earthRef} data={o} key={i} />
           ))}
-
           {crystalPoints.flat().map((o, i) => (
             <Crystals earthRef={earthRef} data={o} key={i} />
           ))}

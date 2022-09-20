@@ -11,7 +11,8 @@ import { WORLD_SIZE } from "../Scene";
 
 export interface PyramidData {
   v3: Vector3;
-  color?: string;
+  color: string;
+  size: number;
 }
 
 const Pyramids = ({
@@ -52,7 +53,7 @@ const Pyramids = ({
   return (
     <group ref={meshRef}>
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0, 0.2, 0.1, 3, 1]} />
+        <cylinderGeometry args={[0, data.size * 2, data.size, 3, 1]} />
         <meshStandardMaterial
           attach="material"
           color={data.color}

@@ -1,4 +1,4 @@
-import { PositionalAudio, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { Mesh } from "three";
@@ -40,7 +40,6 @@ const Moon = ({ color, index }: { color: string; index: number }) => {
 
   return (
     <group>
-      <PositionalAudio url="/audio/sample.mp3" distance={10} loop />
       <mesh ref={meshRef} receiveShadow>
         <sphereBufferGeometry args={[scale, 64, 64]} />
         <meshStandardMaterial

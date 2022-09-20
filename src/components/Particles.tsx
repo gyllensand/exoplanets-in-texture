@@ -28,18 +28,12 @@ const Particles = ({ count }: { count: number }) => {
       const t = Math.random() * 100;
       const factor = 20 + Math.random() * 100;
       const speed = 0.001 + Math.random() / 200;
-      const xFactor = -50 + Math.random() * 100;
-      const yFactor = -50 + Math.random() * 100;
-      const zFactor = 50 + Math.random() * 10;
       const { x, y, z } = pickRandomSphericalPos();
 
       temp.push({
         t,
         factor,
         speed,
-        xFactor,
-        yFactor,
-        zFactor,
         mx: 0,
         my: 0,
         x,
@@ -51,12 +45,11 @@ const Particles = ({ count }: { count: number }) => {
     return temp;
   }, [count]);
 
-  useFrame((state) => {
+  useFrame(() => {
     particles.forEach((particle, i) => {
-      let { t, factor, speed, xFactor, yFactor, zFactor, x, y } = particle;
+      let { t, factor, speed, x, y } = particle;
       t = particle.t += speed / 2;
 
-      const a = Math.cos(t) + Math.sin(t * 1) / 10;
       const b = Math.sin(t) + Math.cos(t * 2) / 10;
       const s = Math.cos(t);
 

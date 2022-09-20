@@ -40,7 +40,6 @@ const Clouds = ({ type, color }: { type: number; color: string }) => {
       <sphereBufferGeometry args={[WORLD_SIZE + 0.02, 64, 64]} />
       <meshStandardMaterial
         attach="material"
-        // color={color}
         depthWrite={false}
         transparent
         opacity={0.2}

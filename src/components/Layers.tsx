@@ -413,8 +413,10 @@ const Layers = ({
 
         case TEXTURE_TYPES.FOREST:
           Object.keys(forestTexture).forEach((key) => {
-            forestTexture[key as keyof typeof forestTexture].wrapS = RepeatWrapping;
-            forestTexture[key as keyof typeof forestTexture].wrapT = RepeatWrapping;
+            forestTexture[key as keyof typeof forestTexture].wrapS =
+              RepeatWrapping;
+            forestTexture[key as keyof typeof forestTexture].wrapT =
+              RepeatWrapping;
             forestTexture[key as keyof typeof forestTexture].repeat.x = 8;
             forestTexture[key as keyof typeof forestTexture].repeat.y = 4;
           });
@@ -454,11 +456,17 @@ const Layers = ({
   const getLayers = useCallback(() => {
     return layers.map((o, i) => {
       return (
-        <group>
-          {/* <PositionalAudio url="/audio/sample.mp3" distance={10} loop /> */}
+        <group key={i}>
+          {/* {i === 0 && (
+            <PositionalAudio
+              autoplay
+              url="/audio/forest.mp3"
+              distance={1}
+              loop
+            />
+          )} */}
           <mesh
             ref={meshRef}
-            key={i}
             receiveShadow
             rotation={[i === 0 ? Math.PI : 0, 0, 0]}
           >

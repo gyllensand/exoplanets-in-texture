@@ -1,6 +1,6 @@
 import { useTexture } from "@react-three/drei";
 import { useMemo } from "react";
-import { EARTH_TYPES, MOUNTAIN_TYPES, RESP_COLORS } from "../constants";
+import { EARTH_TYPES, MOUNTAIN_TYPES } from "../constants";
 import { earthType, WORLD_SIZE } from "../Scene";
 import {
   getRandomNumber,
@@ -21,7 +21,6 @@ const Mountains = () => {
   const depth = useMemo(() => pickRandomDecimalFromInterval(0.002, 0.02), []);
   const rotationX = useMemo(() => getRandomNumber() * 5, []);
   const rotationY = useMemo(() => getRandomNumber() * 5, []);
-  // const color = useMemo(() => pickRandomHash(RESP_COLORS[earthType]), []);
   const color = useMemo(
     () =>
       earthType === EARTH_TYPES.DRY
@@ -37,14 +36,6 @@ const Mountains = () => {
       <sphereBufferGeometry
         args={[WORLD_SIZE - depth, 64, 64, 0, size, 1, size]}
       />
-      {/* <meshPhysicalMaterial
-        attach="material"
-        roughness={0.8}
-        {...texture}
-        displacementScale={1}
-        reflectivity={1}
-        color={color}
-      /> */}
       <meshStandardMaterial
         attach="material"
         roughness={0.8}

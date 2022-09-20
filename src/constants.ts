@@ -1,6 +1,11 @@
-export const MOUNTAINS = [0, 1, 2, 3];
-export const MOONS = [1];
-export const CLOUDS = [0, 1];
+export const MOUNTAINS_AMOUNT = [0, 1, 2, 3];
+export const MOUNTAIN_TYPES = [1, 2];
+export const PARTICLES_AMOUNT = [0, 0, 0, 500, 1000, 1500, 2000];
+export const MOONS = [0, 1];
+export const CLOUD_TYPES = [0, 1];
+export const PYRAMIDS_AMOUNT = [0, 1, 2, 3, 4];
+export const TREES_AMOUNT = [5, 10, 10, 20, 30];
+export const SUN_ROTATION = [-1, -2];
 
 export enum TEXTURE_TYPES {
   EMPTY = 0,
@@ -15,6 +20,7 @@ export enum TEXTURE_TYPES {
   SAND = 9,
   MOSS = 10,
   COBBLESTONE = 11,
+  FOREST = 12,
 }
 
 export enum EARTH_TYPES {
@@ -25,26 +31,26 @@ export enum EARTH_TYPES {
 }
 
 export const EARTHS = [
-  ...new Array(20).fill(null).map(() => 0),
-  ...new Array(1).fill(null).map(() => 1),
-  ...new Array(1).fill(null).map(() => 2),
+  // ...new Array(20).fill(null).map(() => 0),
+  // ...new Array(1).fill(null).map(() => 1),
+  // ...new Array(1).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
 ];
 
 export const DRY_TEXTURES = [
-  ...new Array(5).fill(null).map(() => 1),
+  ...new Array(1).fill(null).map(() => 1),
   ...new Array(1).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 9),
 ];
 
 export const WET_TEXTURES = [
-  ...new Array(5).fill(null).map(() => 7),
-  ...new Array(1).fill(null).map(() => 5),
-  ...new Array(1).fill(null).map(() => 6),
+  ...new Array(1).fill(null).map(() => 7),
+  ...new Array(2).fill(null).map(() => 5),
+  ...new Array(2).fill(null).map(() => 6),
 ];
 
 export const VEGETATIVE_TEXTURES = [
-  ...new Array(5).fill(null).map(() => 8),
+  ...new Array(1).fill(null).map(() => 12),
   ...new Array(1).fill(null).map(() => 10),
   ...new Array(1).fill(null).map(() => 11),
 ];
@@ -55,7 +61,7 @@ export const MIXED_TEXTURES = [
   ...new Array(3).fill(null).map(() => 2),
   ...new Array(1).fill(null).map(() => 3),
   ...new Array(3).fill(null).map(() => 4),
-  ...new Array(1).fill(null).map(() => 5),
+  // ...new Array(1).fill(null).map(() => 5),
   ...new Array(3).fill(null).map(() => 6),
   ...new Array(1).fill(null).map(() => 7),
   ...new Array(3).fill(null).map(() => 8),
@@ -94,23 +100,17 @@ export const THEME_COLORS = [
   "#800b0b",
 ];
 
-export const LIGHT_THEMES = [
-  ...new Array(40).fill(null).map(() => "#ffffff"),
-  "#EE786E",
-  "#344df2",
-  "#eb3434",
-  "#dc0fc0",
-];
+export const BG_THEMES = [
+  ...new Array(10).fill(null).map(() => "#ffffff"),
+  "#fff6d1",
+  "#d8ffdd",
+]
 
-export const FLASH_LIGHT_COLORS = [
-  ...new Array(20).fill(null).map(() => "#ffffff"),
+export const LIGHT_THEMES = [
+  ...new Array(10).fill(null).map(() => "#ffffff"),
+  "#e0feff",
+  "#FCEEB5",
   "#ffce00",
-  "#30f8a0",
-  "#eb3434",
-  "#fe7418",
-  "lightpink",
-  "#00f7fb",
-  "#dc0fc0",
 ];
 
 export const TREE_COLORS = ["green", "green", "#5ca806"];
@@ -132,6 +132,7 @@ export const DRY_COLORS = [
   "#ffce00",
   "#eb3434",
   "#FCEEB5",
+  "#dc0fc0",
 ];
 
 export const WET_COLORS = [

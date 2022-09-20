@@ -1,4 +1,4 @@
-import { useTexture } from "@react-three/drei";
+import { PositionalAudio, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, RefObject, useEffect, useCallback, useMemo } from "react";
 import { Mesh, RepeatWrapping, SphereBufferGeometry } from "three";
@@ -52,7 +52,7 @@ const Layers = ({
   });
 
   const iceTexture = useTexture({
-    map: "/textures/ice/Map.png",
+    // map: "/textures/ice/Map.png",
     displacementMap: "/textures/ice/DisplacementMap.png",
     normalMap: "/textures/ice/NormalMap.jpg",
     aoMap: "/textures/ice/AmbientOcclusionMap.jpg",
@@ -87,7 +87,7 @@ const Layers = ({
   });
 
   const mossTexture = useTexture({
-    map: "/textures/moss/Map.png",
+    // map: "/textures/moss/Map.png",
     displacementMap: "/textures/moss/DisplacementMap.png",
     normalMap: "/textures/moss/NormalMap.png",
     aoMap: "/textures/moss/AmbientOcclusionMap.png",
@@ -97,6 +97,12 @@ const Layers = ({
     displacementMap: "/textures/cobblestone/DisplacementMap.png",
     normalMap: "/textures/cobblestone/NormalMap.png",
     aoMap: "/textures/cobblestone/AmbientOcclusionMap.png",
+  });
+
+  const forestTexture = useTexture({
+    displacementMap: "/textures/forest/DisplacementMap.jpg",
+    normalMap: "/textures/forest/NormalMap.jpg",
+    aoMap: "/textures/forest/AmbientOcclusionMap.jpg",
   });
 
   useEffect(() => {
@@ -287,8 +293,7 @@ const Layers = ({
 
           return (
             <meshStandardMaterial
-              emissive={"lightblue"}
-              emissiveIntensity={0.4}
+              color={color}
               roughness={0.2}
               {...iceTexture}
               displacementScale={0}
@@ -406,6 +411,24 @@ const Layers = ({
             />
           );
 
+        case TEXTURE_TYPES.FOREST:
+          Object.keys(forestTexture).forEach((key) => {
+            forestTexture[key as keyof typeof forestTexture].wrapS = RepeatWrapping;
+            forestTexture[key as keyof typeof forestTexture].wrapT = RepeatWrapping;
+            forestTexture[key as keyof typeof forestTexture].repeat.x = 8;
+            forestTexture[key as keyof typeof forestTexture].repeat.y = 4;
+          });
+
+          return (
+            <meshStandardMaterial
+              color={color}
+              transparent
+              opacity={0.5}
+              {...forestTexture}
+              displacementScale={0}
+            />
+          );
+
         default:
           return (
             <meshStandardMaterial color={color} transparent opacity={0.5} />
@@ -424,28 +447,35 @@ const Layers = ({
       sandTexture,
       mossTexture,
       cobblestoneTexture,
+      forestTexture,
     ]
   );
 
   const getLayers = useCallback(() => {
     return layers.map((o, i) => {
       return (
-        <mesh
-          ref={meshRef}
-          key={i}
-          receiveShadow
-          rotation={[i === 0 ? Math.PI : 0, 0, 0]}
-        >
-          <sphereBufferGeometry
-            args={[
-              WORLD_SIZE + 0.01,
-              SEGMENTS,
-              SEGMENTS,
-              ...getLayerArgs(o.index),
-            ]}
-          />
-          {getMaterial(o)}
-        </mesh>
+        <group>
+          {/* <PositionalAudio url="/audio/sample.mp3" distance={10} loop /> */}
+          <mesh
+            ref={meshRef}
+            key={i}
+            receiveShadow
+            rotation={[i === 0 ? Math.PI : 0, 0, 0]}
+          >
+            <sphereBufferGeometry
+              args={[
+                WORLD_SIZE + 0.01,
+                SEGMENTS,
+                SEGMENTS,
+                ...getLayerArgs(o.index),
+              ]}
+            />
+            {(i === 0 || i === layers.length - 1) &&
+            o.texture === TEXTURE_TYPES.WATER
+              ? getMaterial({ ...o, texture: TEXTURE_TYPES.WINDY_SNOW })
+              : getMaterial(o)}
+          </mesh>
+        </group>
       );
     });
   }, [getLayerArgs, layers, getMaterial]);

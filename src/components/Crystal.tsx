@@ -15,7 +15,7 @@ export interface CrystalData {
   color?: string;
 }
 
-const Crystals = ({
+const Crystal = ({
   data,
   earthRef,
 }: {
@@ -92,4 +92,4 @@ const Crystals = ({
   );
 };
 
-export default Crystals;
+export default Crystal;

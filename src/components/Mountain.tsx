@@ -8,7 +8,7 @@ import {
   pickRandomHash,
 } from "../utils";
 
-const Mountains = () => {
+const Mountain = () => {
   const type = useMemo(() => pickRandomHash(MOUNTAIN_TYPES), []);
 
   const texture = useTexture({
@@ -47,4 +47,4 @@ const Mountains = () => {
   );
 };
 
-export default Mountains;
+export default Mountain;

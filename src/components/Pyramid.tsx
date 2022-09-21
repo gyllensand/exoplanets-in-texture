@@ -15,7 +15,7 @@ export interface PyramidData {
   size: number;
 }
 
-const Pyramids = ({
+const Pyramid = ({
   data,
   earthRef,
 }: {
@@ -66,4 +66,4 @@ const Pyramids = ({
   );
 };
 
-export default Pyramids;
+export default Pyramid;

@@ -1,17 +1,11 @@
-import { Float, OrbitControls, useHelper } from "@react-three/drei";
+import { Float, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
-import {
-  Mesh,
-  PointLight,
-  PointLightHelper,
-  SphereBufferGeometry,
-  Vector3,
-} from "three";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Mesh, PointLight, SphereBufferGeometry, Vector3 } from "three";
 import Earth from "./components/Earth";
-import Pyramids from "./components/Pyramids";
+import Pyramid from "./components/Pyramid";
 import Clouds from "./components/Clouds";
-import Mountains from "./components/Mountains";
+import Mountain from "./components/Mountain";
 import Layers from "./components/Layers";
 import {
   CLOUD_TYPES,
@@ -36,6 +30,8 @@ import {
   PARTICLES_AMOUNT,
   LIGHT_THEMES,
   BG_THEMES,
+  AMBIENT_LIGHT,
+  TEXTURE_TYPES,
 } from "./constants";
 import {
   getRandomNumber,
@@ -46,14 +42,17 @@ import {
   pickRandomIntFromInterval,
   pickRandomSphericalPos,
   pickRandomTextureWithTheme,
+  range,
 } from "./utils";
 import Trees from "./components/Trees/Trees";
-import Crystals from "./components/Crystals";
+import Crystal from "./components/Crystal";
 import Moon from "./components/Moon";
 import Particles from "./components/Particles";
+import { Player, start } from "tone";
 
 export const WORLD_SIZE = 0.8;
 export const earthType = pickRandomHash(EARTHS);
+const earthTypeNames = ["mixed", "dry", "wet", "vegetative"];
 
 let colorTheme: string;
 let secondaryColorTheme: string;
@@ -83,6 +82,24 @@ switch (earthType) {
     break;
 }
 
+const AUDIO_PATHS = [
+  `/audio/outdoor.mp3`,
+  `/audio/desert.mp3`,
+  `/audio/arctic.mp3`,
+  `/audio/forest.mp3`,
+  `/audio/ocean.mp3`,
+];
+
+const audioPath =
+  primaryTexture === TEXTURE_TYPES.WATER
+    ? AUDIO_PATHS[4]
+    : AUDIO_PATHS[earthType];
+
+const AUDIO = new Player({
+  url: audioPath,
+  loop: true,
+});
+
 const treeTheme = pickRandomHash(TREE_THEMES);
 const sunTheme = pickRandomHash(LIGHT_THEMES);
 const bgTheme = pickRandomHash(BG_THEMES);
@@ -91,31 +108,12 @@ const pyramids = pickRandomHash(PYRAMIDS_AMOUNT);
 const particles = pickRandomHash(PARTICLES_AMOUNT);
 const trees = pickRandomHash(TREES_AMOUNT);
 const moons = pickRandomHash(MOONS);
+const ambientLight = pickRandomHash(AMBIENT_LIGHT);
 const clouds = pickRandomHash(CLOUD_TYPES);
 const earthRotation = getRandomNumber() * Math.PI;
 const sunRotation = pickRandomHash(SUN_ROTATION);
 
-// @ts-ignore
-// window.$fxhashFeatures = {
-//   instrument,
-//   primaryBgColor,
-//   secondaryBgColor,
-//   lightingTheme: mainTheme,
-//   shapeCount: shapes.length,
-//   shapeComposition: objects.reduce(
-//     (total, value) => (total += value.composition),
-//     0
-//   ),
-// };
-
 const layers = new Array(14).fill(null).map((o, i) => {
-  // const composition =
-  //   shape +
-  //   currentColor.charCodeAt(6) +
-  //   secondColor.charCodeAt(6) +
-  //   i +
-  //   (objectMeta[i].coveringIndexes?.length || 0);
-
   const texture = pickRandomTextureWithTheme(
     primaryTexture,
     RESP_TEXTURES[earthType],
@@ -126,10 +124,12 @@ const layers = new Array(14).fill(null).map((o, i) => {
     RESP_COLORS[earthType],
     THEME_COLORS.length
   );
+  const composition = texture + color.charCodeAt(6) + i;
 
   return {
     index: i,
     texture,
+    composition,
     color,
   };
 });
@@ -137,31 +137,32 @@ const layers = new Array(14).fill(null).map((o, i) => {
 export const getRandomEarthPoints = (count: number) =>
   new Array(count).fill(null).map(() => pickRandomSphericalPos());
 
+// @ts-ignore
+window.$fxhashFeatures = {
+  earthType: earthTypeNames[earthType],
+  primaryTexture,
+  colorTheme,
+  treeTheme,
+  sunTheme,
+  bgTheme,
+  cloudTheme: clouds,
+  hasMoon: moons,
+  ambientLight,
+  particlesCount: particles,
+  shapeComposition: layers.reduce(
+    (total, value) => (total += value.composition),
+    0
+  ),
+};
+
 const Scene = () => {
   const earthRef = useRef<Mesh<SphereBufferGeometry>>(null);
-  const { viewport, aspect, scene, gl } = useThree((state) => ({
-    viewport: state.viewport,
-    aspect: state.viewport.aspect,
-    scene: state.scene,
-    gl: state.gl,
-  }));
-
-  // const toneInitialized = useRef(false);
-
-  // useEffect(() => {
-  //   BASS.forEach((bass) => bass.sampler.toDestination());
-  //   HITS.forEach((hit) => {
-  //     hit.sampler.toDestination();
-  //   });
-  // }, []);
-
-  // const initializeTone = useCallback(async () => {
-  //   await start();
-  //   toneInitialized.current = true;
-  // }, []);
-
   const lightRef = useRef<PointLight>();
-  useHelper(lightRef, PointLightHelper, 1, "red");
+  const controlsRef = useRef(null);
+  const toneInitialized = useRef(false);
+  const { aspect } = useThree((state) => ({
+    aspect: state.viewport.aspect,
+  }));
 
   useFrame(({ clock }) => {
     if (lightRef?.current) {
@@ -171,7 +172,39 @@ const Scene = () => {
         Math.sin(clock.getElapsedTime() / 4) * 10
       );
     }
+
+    if (controlsRef?.current) {
+      const interpolatedVolume = range(
+        2,
+        6,
+        primaryTexture === TEXTURE_TYPES.WATER ? 0 : 5,
+        primaryTexture === TEXTURE_TYPES.WATER ? -20 : -15,
+        // @ts-ignore
+        controlsRef.current.getDistance()
+      );
+
+      AUDIO.volume.value = Math.round(interpolatedVolume * 100) / 100;
+    }
   });
+
+  useEffect(() => {
+    AUDIO.toDestination();
+  }, []);
+
+  const initializeTone = useCallback(async () => {
+    await start();
+    toneInitialized.current = true;
+  }, []);
+
+  const onPointerDown = useCallback(async () => {
+    if (!toneInitialized.current) {
+      await initializeTone();
+    }
+
+    if (AUDIO.state !== "started" && AUDIO.loaded) {
+      AUDIO.start();
+    }
+  }, [initializeTone]);
 
   const treePoints = useMemo(
     () =>
@@ -230,12 +263,11 @@ const Scene = () => {
     []
   );
 
-  console.log(gl.info.render);
-
   return (
-    <>
+    <group onPointerDown={onPointerDown}>
       <color attach="background" args={[bgTheme]} />
       <OrbitControls
+        ref={controlsRef}
         enabled={true}
         enablePan={false}
         maxPolarAngle={Math.PI * 0.75}
@@ -243,7 +275,7 @@ const Scene = () => {
         maxDistance={6}
         minDistance={2}
       />
-      <ambientLight intensity={0.2} />
+      <ambientLight intensity={ambientLight} />
       <group
         scale={[
           getSizeByAspect(1, aspect),
@@ -281,16 +313,16 @@ const Scene = () => {
           <Earth color={colorTheme} ref={earthRef} />
 
           {pyramidPoints.flat().map((o, i) => (
-            <Pyramids earthRef={earthRef} data={o} key={i} />
+            <Pyramid earthRef={earthRef} data={o} key={i} />
           ))}
           {crystalPoints.flat().map((o, i) => (
-            <Crystals earthRef={earthRef} data={o} key={i} />
+            <Crystal earthRef={earthRef} data={o} key={i} />
           ))}
           {new Array(moons).fill(null).map((o, i) => (
             <Moon color={secondaryColorTheme} index={i} key={i} />
           ))}
           {new Array(mountains).fill(null).map((o, i) => (
-            <Mountains key={i} />
+            <Mountain key={i} />
           ))}
 
           <Clouds type={clouds} color={colorTheme} />
@@ -298,7 +330,7 @@ const Scene = () => {
           <Layers earthRef={earthRef} layers={layers} />
         </group>
       </Float>
-    </>
+    </group>
   );
 };
 

@@ -12,9 +12,9 @@ const Mountain = () => {
   const type = useMemo(() => pickRandomHash(MOUNTAIN_TYPES), []);
 
   const texture = useTexture({
-    displacementMap: `/textures/mountains/${type}/DisplacementMap.jpg`,
-    normalMap: `/textures/mountains/${type}/NormalMap.jpg`,
-    aoMap: `/textures/mountains/${type}/AmbientOcclusionMap.jpg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/mountains/${type}/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/mountains/${type}/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/mountains/${type}/AmbientOcclusionMap.jpg`,
   });
 
   const size = useMemo(() => pickRandomDecimalFromInterval(0.8, 1.2), []);

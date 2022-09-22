@@ -62,8 +62,8 @@ const Leaves = ({
   }, [earthRef, objects, tempObject]);
 
   const texture = useTexture({
-    normalMap: "/textures/desert/NormalMap.jpg",
-    aoMap: "/textures/desert/AmbientOcclusionMap.jpg",
+    normalMap: `${process.env.PUBLIC_URL}/textures/desert/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/desert/AmbientOcclusionMap.jpg`,
   });
 
   Object.keys(texture).forEach((key) => {

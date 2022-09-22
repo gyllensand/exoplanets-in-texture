@@ -25,9 +25,9 @@ const Pyramid = ({
   const meshRef = useRef<Mesh<BoxBufferGeometry>>();
 
   const texture = useTexture({
-    displacementMap: "/textures/cobblestone/DisplacementMap.png",
-    normalMap: "/textures/cobblestone/NormalMap.png",
-    aoMap: "/textures/cobblestone/AmbientOcclusionMap.png",
+    displacementMap: `${process.env.PUBLIC_URL}/textures/cobblestone/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/cobblestone/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/cobblestone/AmbientOcclusionMap.png`,
   });
 
   Object.keys(texture).forEach((key) => {

@@ -7,9 +7,9 @@ import { pickRandomDecimalFromInterval } from "../utils";
 const Moon = ({ color, index }: { color: string; index: number }) => {
   const meshRef = useRef<Mesh>();
   const texture = useTexture({
-    displacementMap: "/textures/moss/DisplacementMap.png",
-    normalMap: "/textures/moss/NormalMap.png",
-    aoMap: "/textures/moss/AmbientOcclusionMap.png",
+    displacementMap: `${process.env.PUBLIC_URL}/textures/moss/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/moss/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/moss/AmbientOcclusionMap.png`,
   });
   const scale = useMemo(() => pickRandomDecimalFromInterval(0.04, 0.08), []);
   const rotationX = useMemo(() => pickRandomDecimalFromInterval(1, 2), []);

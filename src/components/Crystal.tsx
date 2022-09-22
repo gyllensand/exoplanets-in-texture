@@ -27,8 +27,8 @@ const Crystal = ({
   const rotation = useMemo(() => getRandomNumber() * 5, []);
 
   const texture = useTexture({
-    normalMap: "/textures/ice/NormalMap.jpg",
-    aoMap: "/textures/ice/AmbientOcclusionMap.jpg",
+    normalMap: `${process.env.PUBLIC_URL}/textures/ice/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/ice/AmbientOcclusionMap.jpg`,
   });
 
   Object.keys(texture).forEach((key) => {

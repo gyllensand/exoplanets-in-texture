@@ -8,16 +8,16 @@ import { getRandomNumber } from "../utils";
 const Clouds = ({ type, color }: { type: number; color: string }) => {
   const meshRef = useRef<Mesh>();
   const texture = useTexture({
-    map: "/textures/clouds/Map.jpeg",
-    displacementMap: "/textures/clouds/DisplacementMap.jpg",
-    normalMap: "/textures/clouds/NormalMap.jpg",
-    aoMap: "/textures/clouds/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/clouds/Map.jpeg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/clouds/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/clouds/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/clouds/AmbientOcclusionMap.jpg`,
   });
   const texture2 = useTexture({
-    map: "/textures/stripes/Map.jpg",
-    displacementMap: "/textures/stripes/DisplacementMap.jpg",
-    normalMap: "/textures/stripes/NormalMap.jpg",
-    aoMap: "/textures/stripes/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/stripes/Map.jpg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/stripes/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/stripes/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/stripes/AmbientOcclusionMap.jpg`,
   });
 
   const rotationX = useMemo(() => getRandomNumber() * 5, []);

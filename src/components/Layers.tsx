@@ -24,85 +24,85 @@ const Layers = ({
   const meshRef = useRef<Mesh>();
 
   const desertTexture = useTexture({
-    map: "/textures/desert/Map.jpeg",
-    displacementMap: "/textures/desert/DisplacementMap.jpg",
-    normalMap: "/textures/desert/NormalMap.jpg",
-    aoMap: "/textures/desert/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/desert/Map.jpeg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/desert/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/desert/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/desert/AmbientOcclusionMap.jpg`,
   });
 
   const tracksTexture = useTexture({
-    map: "/textures/tracks/Map.jpg",
-    displacementMap: "/textures/tracks/DisplacementMap.jpg",
-    normalMap: "/textures/tracks/NormalMap.jpg",
-    aoMap: "/textures/tracks/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/tracks/Map.jpg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/tracks/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/tracks/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/tracks/AmbientOcclusionMap.jpg`,
   });
 
   const stitchTexture = useTexture({
-    map: "/textures/stitch/Map.jpg",
-    displacementMap: "/textures/stitch/DisplacementMap.png",
-    normalMap: "/textures/stitch/NormalMap.jpg",
-    aoMap: "/textures/stitch/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/stitch/Map.jpg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/stitch/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/stitch/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/stitch/AmbientOcclusionMap.jpg`,
   });
 
   const pavementTexture = useTexture({
-    map: "/textures/pavement/Map.png",
-    displacementMap: "/textures/pavement/DisplacementMap.png",
-    normalMap: "/textures/pavement/NormalMap.png",
-    aoMap: "/textures/pavement/AmbientOcclusionMap.png",
+    map: `${process.env.PUBLIC_URL}/textures/pavement/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/pavement/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/pavement/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/pavement/AmbientOcclusionMap.png`,
   });
 
   const iceTexture = useTexture({
-    // map: "/textures/ice/Map.png",
-    displacementMap: "/textures/ice/DisplacementMap.png",
-    normalMap: "/textures/ice/NormalMap.jpg",
-    aoMap: "/textures/ice/AmbientOcclusionMap.jpg",
+    // map: `${process.env.PUBLIC_URL}/textures/ice/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/ice/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/ice/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/ice/AmbientOcclusionMap.jpg`,
   });
 
   const snowTexture = useTexture({
-    map: "/textures/snow/Map.png",
-    displacementMap: "/textures/snow/DisplacementMap.png",
-    normalMap: "/textures/snow/NormalMap.png",
-    aoMap: "/textures/snow/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/snow/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/snow/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/snow/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/snow/AmbientOcclusionMap.jpg`,
   });
 
   const waterTexture = useTexture({
-    map: "/textures/water/Map.jpeg",
-    displacementMap: "/textures/water/Map.jpeg",
-    normalMap: "/textures/water/Map.jpeg",
-    aoMap: "/textures/water/AmbientOcclusionMap.jpg",
+    map: `${process.env.PUBLIC_URL}/textures/water/Map.jpeg`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/water/Map.jpeg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/water/Map.jpeg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/water/AmbientOcclusionMap.jpg`,
   });
 
   const checkerboardTexture = useTexture({
-    // map: "/textures/checkerboard/Map.png",
-    displacementMap: "/textures/checkerboard/DisplacementMap.png",
-    normalMap: "/textures/checkerboard/NormalMap.png",
-    aoMap: "/textures/checkerboard/AmbientOcclusionMap.png",
+    // map: `${process.env.PUBLIC_URL}/textures/checkerboard/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/checkerboard/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/checkerboard/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/checkerboard/AmbientOcclusionMap.png`,
   });
 
   const sandTexture = useTexture({
-    map: "/textures/sand/Map.png",
-    displacementMap: "/textures/sand/DisplacementMap.png",
-    normalMap: "/textures/sand/NormalMap.png",
-    aoMap: "/textures/sand/AmbientOcclusionMap.png",
+    map: `${process.env.PUBLIC_URL}/textures/sand/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/sand/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/sand/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/sand/AmbientOcclusionMap.png`,
   });
 
   const mossTexture = useTexture({
-    // map: "/textures/moss/Map.png",
-    displacementMap: "/textures/moss/DisplacementMap.png",
-    normalMap: "/textures/moss/NormalMap.png",
-    aoMap: "/textures/moss/AmbientOcclusionMap.png",
+    // map: `${process.env.PUBLIC_URL}/textures/moss/Map.png`,
+    displacementMap: `${process.env.PUBLIC_URL}/textures/moss/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/moss/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/moss/AmbientOcclusionMap.png`,
   });
 
   const cobblestoneTexture = useTexture({
-    displacementMap: "/textures/cobblestone/DisplacementMap.png",
-    normalMap: "/textures/cobblestone/NormalMap.png",
-    aoMap: "/textures/cobblestone/AmbientOcclusionMap.png",
+    displacementMap: `${process.env.PUBLIC_URL}/textures/cobblestone/DisplacementMap.png`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/cobblestone/NormalMap.png`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/cobblestone/AmbientOcclusionMap.png`,
   });
 
   const forestTexture = useTexture({
-    displacementMap: "/textures/forest/DisplacementMap.jpg",
-    normalMap: "/textures/forest/NormalMap.jpg",
-    aoMap: "/textures/forest/AmbientOcclusionMap.jpg",
+    displacementMap: `${process.env.PUBLIC_URL}/textures/forest/DisplacementMap.jpg`,
+    normalMap: `${process.env.PUBLIC_URL}/textures/forest/NormalMap.jpg`,
+    aoMap: `${process.env.PUBLIC_URL}/textures/forest/AmbientOcclusionMap.jpg`,
   });
 
   useEffect(() => {

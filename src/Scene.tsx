@@ -83,12 +83,12 @@ switch (earthType) {
 }
 
 const AUDIO_PATHS = [
-  `/audio/outdoor.mp3`,
-  `/audio/desert.mp3`,
-  `/audio/arctic.mp3`,
-  `/audio/forest.mp3`,
-  `/audio/ocean.mp3`,
-  `/audio/outdoor2.mp3`,
+  `${process.env.PUBLIC_URL}/audio/outdoor.mp3`,
+  `${process.env.PUBLIC_URL}/audio/desert.mp3`,
+  `${process.env.PUBLIC_URL}/audio/arctic.mp3`,
+  `${process.env.PUBLIC_URL}/audio/forest.mp3`,
+  `${process.env.PUBLIC_URL}/audio/ocean.mp3`,
+  `${process.env.PUBLIC_URL}/audio/outdoor2.mp3`,
 ];
 
 const audioPath =
@@ -127,7 +127,10 @@ const layers = new Array(14).fill(null).map((o, i) => {
     RESP_COLORS[earthType],
     THEME_COLORS.length
   );
-  const composition = texture + color.charCodeAt(6) + i;
+  const composition =
+    texture +
+    (color.charCodeAt(6) ? color.charCodeAt(6) : color.charCodeAt(4)) +
+    i;
 
   return {
     index: i,

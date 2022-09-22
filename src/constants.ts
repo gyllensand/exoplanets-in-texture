@@ -46,8 +46,8 @@ export const DRY_TEXTURES = [
 
 export const WET_TEXTURES = [
   ...new Array(1).fill(null).map(() => 7),
-  ...new Array(2).fill(null).map(() => 5),
-  ...new Array(2).fill(null).map(() => 6),
+  ...new Array(1).fill(null).map(() => 5),
+  ...new Array(1).fill(null).map(() => 6),
 ];
 
 export const VEGETATIVE_TEXTURES = [
@@ -105,6 +105,7 @@ export const BG_THEMES = [
   ...new Array(10).fill(null).map(() => "#ffffff"),
   "#fff6d1",
   "#d8ffdd",
+  "pink"
 ]
 
 export const LIGHT_THEMES = [

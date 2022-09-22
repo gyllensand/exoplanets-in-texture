@@ -1,6 +1,6 @@
 import { Float, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { Mesh, PointLight, SphereBufferGeometry, Vector3 } from "three";
 import Earth from "./components/Earth";
 import Pyramid from "./components/Pyramid";
@@ -88,11 +88,14 @@ const AUDIO_PATHS = [
   `/audio/arctic.mp3`,
   `/audio/forest.mp3`,
   `/audio/ocean.mp3`,
+  `/audio/outdoor2.mp3`,
 ];
 
 const audioPath =
   primaryTexture === TEXTURE_TYPES.WATER
     ? AUDIO_PATHS[4]
+    : earthType === EARTH_TYPES.MIXED
+    ? pickRandomHash([AUDIO_PATHS[0], AUDIO_PATHS[5]])
     : AUDIO_PATHS[earthType];
 
 const AUDIO = new Player({
@@ -108,7 +111,7 @@ const pyramids = pickRandomHash(PYRAMIDS_AMOUNT);
 const particles = pickRandomHash(PARTICLES_AMOUNT);
 const trees = pickRandomHash(TREES_AMOUNT);
 const moons = pickRandomHash(MOONS);
-const ambientLight = pickRandomHash(AMBIENT_LIGHT);
+const ambientLightIntensity = pickRandomHash(AMBIENT_LIGHT);
 const clouds = pickRandomHash(CLOUD_TYPES);
 const earthRotation = getRandomNumber() * Math.PI;
 const sunRotation = pickRandomHash(SUN_ROTATION);
@@ -142,12 +145,10 @@ window.$fxhashFeatures = {
   earthType: earthTypeNames[earthType],
   primaryTexture,
   colorTheme,
-  treeTheme,
   sunTheme,
   bgTheme,
   cloudTheme: clouds,
-  hasMoon: moons,
-  ambientLight,
+  ambientLightIntensity,
   particlesCount: particles,
   shapeComposition: layers.reduce(
     (total, value) => (total += value.composition),
@@ -155,7 +156,7 @@ window.$fxhashFeatures = {
   ),
 };
 
-const Scene = () => {
+const Scene = ({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement> }) => {
   const earthRef = useRef<Mesh<SphereBufferGeometry>>(null);
   const lightRef = useRef<PointLight>();
   const controlsRef = useRef(null);
@@ -177,8 +178,14 @@ const Scene = () => {
       const interpolatedVolume = range(
         2,
         6,
-        primaryTexture === TEXTURE_TYPES.WATER ? 0 : 5,
-        primaryTexture === TEXTURE_TYPES.WATER ? -20 : -15,
+        primaryTexture === TEXTURE_TYPES.WATER ||
+          earthType === EARTH_TYPES.VEGETATIVE
+          ? -5
+          : 0,
+        primaryTexture === TEXTURE_TYPES.WATER ||
+          earthType === EARTH_TYPES.VEGETATIVE
+          ? -20
+          : -15,
         // @ts-ignore
         controlsRef.current.getDistance()
       );
@@ -187,24 +194,34 @@ const Scene = () => {
     }
   });
 
-  useEffect(() => {
-    AUDIO.toDestination();
-  }, []);
-
-  const initializeTone = useCallback(async () => {
-    await start();
-    toneInitialized.current = true;
-  }, []);
-
   const onPointerDown = useCallback(async () => {
     if (!toneInitialized.current) {
-      await initializeTone();
+      await start();
+      toneInitialized.current = true;
     }
 
     if (AUDIO.state !== "started" && AUDIO.loaded) {
       AUDIO.start();
     }
-  }, [initializeTone]);
+  }, []);
+
+  useEffect(() => {
+    AUDIO.toDestination();
+  }, []);
+
+  useEffect(() => {
+    const ref = canvasRef?.current;
+
+    if (!ref) {
+      return;
+    }
+
+    ref.addEventListener("pointerdown", onPointerDown);
+
+    return () => {
+      ref.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [onPointerDown, canvasRef]);
 
   const treePoints = useMemo(
     () =>
@@ -264,7 +281,7 @@ const Scene = () => {
   );
 
   return (
-    <group onPointerDown={onPointerDown}>
+    <>
       <color attach="background" args={[bgTheme]} />
       <OrbitControls
         ref={controlsRef}
@@ -275,7 +292,7 @@ const Scene = () => {
         maxDistance={6}
         minDistance={2}
       />
-      <ambientLight intensity={ambientLight} />
+      <ambientLight intensity={ambientLightIntensity} />
       <group
         scale={[
           getSizeByAspect(1, aspect),
@@ -330,7 +347,7 @@ const Scene = () => {
           <Layers earthRef={earthRef} layers={layers} />
         </group>
       </Float>
-    </group>
+    </>
   );
 };
 

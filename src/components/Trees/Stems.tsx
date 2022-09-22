@@ -3,10 +3,8 @@ import {
   Color,
   Object3D,
   InstancedMesh,
-  Vector3,
   Mesh,
   SphereBufferGeometry,
-  CatmullRomCurve3,
 } from "three";
 import { WORLD_SIZE } from "../../Scene";
 import { TreeData } from "./Trees";
@@ -58,8 +56,13 @@ const Stems = ({
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, objects.length]}>
-      <icosahedronBufferGeometry args={[0.1, 0]} />
-      <meshStandardMaterial attach="material" color="brown" />
+      <icosahedronBufferGeometry args={[0.1, 0]}>
+        <instancedBufferAttribute
+          attachObject={["attributes", "color"]}
+          args={[colorArray, 3]}
+        />
+      </icosahedronBufferGeometry>
+      <meshStandardMaterial attach="material" vertexColors />
     </instancedMesh>
   );
 };

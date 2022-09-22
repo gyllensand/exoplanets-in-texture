@@ -32,9 +32,9 @@ const Moon = ({ color, index }: { color: string; index: number }) => {
     );
 
     meshRef.current.rotation.set(
-      clock.getElapsedTime() / 2,
-      clock.getElapsedTime() / 2,
-      clock.getElapsedTime() / 2
+      clock.getElapsedTime() / 8,
+      clock.getElapsedTime() / 8,
+      clock.getElapsedTime() / 8
     );
   });
 

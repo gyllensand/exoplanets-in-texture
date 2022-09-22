@@ -1,4 +1,4 @@
-import { PositionalAudio, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, RefObject, useEffect, useCallback, useMemo } from "react";
 import { Mesh, RepeatWrapping, SphereBufferGeometry } from "three";
@@ -457,14 +457,6 @@ const Layers = ({
     return layers.map((o, i) => {
       return (
         <group key={i}>
-          {/* {i === 0 && (
-            <PositionalAudio
-              autoplay
-              url="/audio/forest.mp3"
-              distance={1}
-              loop
-            />
-          )} */}
           <mesh
             ref={meshRef}
             receiveShadow

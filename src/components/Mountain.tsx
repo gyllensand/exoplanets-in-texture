@@ -1,7 +1,7 @@
 import { useTexture } from "@react-three/drei";
 import { useMemo } from "react";
 import { EARTH_TYPES, MOUNTAIN_TYPES } from "../constants";
-import { earthType, WORLD_SIZE } from "../Scene";
+import { WORLD_SIZE, earthType } from "../Scene";
 import {
   getRandomNumber,
   pickRandomDecimalFromInterval,

@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { Color, Mesh, Object3D } from "three";
 import { RESP_COLORS } from "../constants";
-import { earthType, WORLD_SIZE } from "../Scene";
+import { WORLD_SIZE, earthType } from "../Scene";
 import { pickRandomHash, pickRandomSphericalPos } from "../utils";
 
 const Particles = ({ count }: { count: number }) => {
@@ -46,6 +46,8 @@ const Particles = ({ count }: { count: number }) => {
   }, [count]);
 
   useFrame(() => {
+    const timeFactor = 1000;
+
     particles.forEach((particle, i) => {
       let { t, factor, speed, x, y } = particle;
       t = particle.t += speed / 2;
@@ -58,14 +60,14 @@ const Particles = ({ count }: { count: number }) => {
 
       dummy.position.setFromSphericalCoords(
         WORLD_SIZE + 20,
-        (particle.my / 500) * b +
+        (particle.my / timeFactor) * b +
           y +
-          Math.sin((t / 500) * factor) +
-          (Math.cos(t * 2) * factor) / 500,
-        (particle.my / 500) * b +
+          Math.sin((t / timeFactor) * factor) +
+          (Math.cos(t * 2) * factor) / timeFactor,
+        (particle.my / timeFactor) * b +
           x +
-          Math.cos((t / 500) * factor) +
-          (Math.sin(t * 3) * factor) / 500
+          Math.cos((t / timeFactor) * factor) +
+          (Math.sin(t * 3) * factor) / timeFactor
       );
 
       dummy.scale.set(s, s, s);
